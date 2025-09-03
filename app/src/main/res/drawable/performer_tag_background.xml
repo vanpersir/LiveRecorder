@@ -1,0 +1,6 @@
+<!-- 新增或确保此文件存在 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <solid android:color="#FFE0B2" /> <!-- 淡橙色 -->
+    <corners android:radius="8dp" />
+</shape>
