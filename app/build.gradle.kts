@@ -2,15 +2,16 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.compose) // 添加Compose Compiler插件
 }
 
 android {
     namespace = "com.ds.liverecorder"
-    compileSdk = 34  // 升级到最新稳定版
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.ds.liverecorder"
-        minSdk = 26   // 提升最低版本以获得更好兼容性
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -29,7 +30,7 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17 // 升级到17
+        sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
@@ -39,6 +40,11 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 }
 
@@ -63,7 +69,7 @@ dependencies {
     // Room数据库
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)  // 使用kapt处理注解
+    kapt(libs.room.compiler)
 
     // Gson
     implementation(libs.gson)
@@ -71,8 +77,22 @@ dependencies {
     // FlexboxLayout用于演出者标签布局
     implementation(libs.flexbox)
 
+    // Jetpack Compose
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.activity.compose)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.navigation.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    
     // 测试
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

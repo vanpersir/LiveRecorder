@@ -22,6 +22,10 @@ class ConcertViewModel(private val repository: ConcertRepository) : ViewModel() 
     fun getAllConcertsFlow(): Flow<List<ConcertEntity>> {
         return repository.getAllConcerts()
     }
+    
+    fun getConcertById(id: Long): Flow<ConcertEntity> {
+        return repository.getConcertById(id)
+    }
 
     fun getConcertsByPerformerName(performerName: String): Flow<List<ConcertEntity>> {
         return repository.getConcertsByPerformerName(performerName)
@@ -52,8 +56,8 @@ class ConcertViewModel(private val repository: ConcertRepository) : ViewModel() 
     }
 
     /**
-     * 自动更新过期演出的状态
-     * 将状态为"待看"且演出时间已过期的演出状态更新为"已看"
+     * 更新过期演出的状态
+     * 将已过期但状态仍为"待看"或"待开票"的演出状态更新为"未赴约"
      */
     fun updateExpiredConcertsStatus() {
         viewModelScope.launch {
@@ -63,17 +67,17 @@ class ConcertViewModel(private val repository: ConcertRepository) : ViewModel() 
                 val now = Date()
                 var updatedCount = 0
                 concerts.forEach { concert ->
-                    // 检查演出状态是否为"待看"且演出时间已过期
-                    if (concert.status == "待看" && concert.date.before(now)) {
-                        // 更新状态为"已看"
-                        val updatedConcert = concert.copy(status = "已看")
+                    // 检查演出状态是否为"待看"或"待开票"且演出时间已过期
+                    if ((concert.status == "待看" || concert.status == "待开票") && concert.date.before(now)) {
+                        // 更新状态为"未赴约"
+                        val updatedConcert = concert.copy(status = "未赴约")
                         repository.updateConcert(updatedConcert)
                         updatedCount++
                     }
                 }
                 // 可选：添加日志记录更新了多少条记录
                 if (updatedCount > 0) {
-                    println("Updated $updatedCount concerts from '待看' to '已看'")
+                    println("Updated $updatedCount concerts from '待看' or '待开票' to '未赴约'")
                 }
             } catch (e: Exception) {
                 // 添加错误处理

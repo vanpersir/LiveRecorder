@@ -12,6 +12,8 @@ class ConcertRepository(
 ) {
     fun getAllConcerts(): Flow<List<ConcertEntity>> = concertDao.getAllConcerts()
     
+    fun getConcertById(id: Long): Flow<ConcertEntity> = concertDao.getConcertById(id)
+    
     suspend fun insertConcert(concert: ConcertEntity): Long {
         return concertDao.insertConcert(concert)
     }

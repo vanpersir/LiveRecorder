@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,21 +12,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LiveRecorder"
         tools:targetApi="31">
+        
         <activity
-            android:name=".ui.ConcertDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.ConcertListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+            android:name=".presentation.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveRecorder">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- 保留原有的Activity声明，但标记为非启动项 -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LiveRecorder" />
+            
+        <activity
+            android:name=".ui.ConcertDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LiveRecorder" />
+            
+        <activity
+            android:name=".ui.ConcertListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LiveRecorder" />
+            
+        <activity
+            android:name=".ui.AddConcertDialogFragment"
+            android:exported="false"
+            android:theme="@style/Theme.LiveRecorder" />
     </application>
 
 </manifest>
