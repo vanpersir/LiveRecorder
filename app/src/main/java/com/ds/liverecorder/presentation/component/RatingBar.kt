@@ -36,7 +36,14 @@ fun RatingBar(
                     tint = if (i <= rating) BrownColor else BrownColor.copy(alpha = 0.4f), // 选中为棕色，未选中为半透明棕色
                     modifier = Modifier
                         .size(32.dp)
-                        .clickable { onRatingChanged(i) }
+                        .clickable { 
+                            // 如果点击已选中的星级，则清空评分，否则设置为对应星级
+                            if (i == rating) {
+                                onRatingChanged(0)
+                            } else {
+                                onRatingChanged(i)
+                            }
+                        }
                         .padding(2.dp)
                 )
             } else {
