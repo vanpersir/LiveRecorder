@@ -42,9 +42,8 @@ fun UpcomingScreen(
     viewModel: ConcertViewModel = concertViewModel(),
     onNavigateToDetail: (ConcertEntity) -> Unit = {}
 ) {
-    val concerts by viewModel.getAllConcertsFlow().collectAsState(initial = emptyList())
-    // 过滤出待看的演出
-    val upcomingConcerts = concerts.filter { it.status == "待看" }
+    val upcomingConcerts by viewModel.getUpcomingConcerts().collectAsState(initial = emptyList())
+
     var displayMode by remember { mutableStateOf("card") } // timeline, card, poster - 统一默认为卡片视图
     var showModeDropdown by remember { mutableStateOf(false) } // 控制下拉框显示状态
     

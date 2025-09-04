@@ -39,6 +39,7 @@ import com.ds.liverecorder.presentation.component.DatePickerField
 import com.ds.liverecorder.presentation.component.PosterImage
 import com.ds.liverecorder.presentation.component.RatingBar
 import com.ds.liverecorder.presentation.component.StatusSelector
+import com.ds.liverecorder.presentation.component.TimePickerField
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Date
@@ -57,6 +58,9 @@ fun AddConcertScreen(
     var ticketPrice by remember { mutableStateOf(initialConcert?.ticketPrice ?: "") }
     var actualPaid by remember { mutableStateOf(initialConcert?.actualPaid ?: "") }
     var otherFees by remember { mutableStateOf(initialConcert?.otherFees ?: "") }
+    var ticketPriceCurrency by remember { mutableStateOf(initialConcert?.ticketPriceCurrency ?: "CNY") }
+    var actualPaidCurrency by remember { mutableStateOf(initialConcert?.actualPaidCurrency ?: "CNY") }
+    var otherFeesCurrency by remember { mutableStateOf(initialConcert?.otherFeesCurrency ?: "CNY") }
     var status by remember { mutableStateOf(initialConcert?.status ?: "") }
     var category by remember { mutableStateOf(initialConcert?.category ?: "") }
     var performers by remember { mutableStateOf(initialConcert?.performers?.joinToString(", ") ?: "") }
@@ -118,15 +122,15 @@ fun AddConcertScreen(
                         date = date,
                         notes = notes,
                         posterResId = initialConcert?.posterResId ?: 0,
-                        posterPath = if (posterPath.isNotEmpty()) posterPath else initialConcert?.posterPath,
+                        posterPath = posterPath,
                         ticketPrice = ticketPrice,
-                        ticketPriceCurrency = initialConcert?.ticketPriceCurrency ?: "CNY",
+                        ticketPriceCurrency = ticketPriceCurrency,
                         actualPaid = actualPaid,
-                        actualPaidCurrency = initialConcert?.actualPaidCurrency ?: "CNY",
+                        actualPaidCurrency = actualPaidCurrency,
                         otherFees = otherFees,
-                        otherFeesCurrency = initialConcert?.otherFeesCurrency ?: "CNY",
-                        performers = if (performers.isNotEmpty()) performers.split(",").map { it.trim() } else listOf(),
-                        guests = if (guests.isNotEmpty()) guests.split(",").map { it.trim() } else listOf(),
+                        otherFeesCurrency = otherFeesCurrency,
+                        performers = performers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
+                        guests = guests.split(",").map { it.trim() }.filter { it.isNotEmpty() },
                         status = status,
                         category = category,
                         rating = rating
@@ -184,14 +188,31 @@ fun AddConcertScreen(
                     .padding(bottom = 16.dp)
             )
             
-            DatePickerField(
-                label = "日期时间",
-                value = date,
-                onDateSelected = { date = it },
+            // 将日期和时间选择器放在同一行
+            androidx.compose.foundation.layout.Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+            ) {
+                DatePickerField(
+                    label = "日期",
+                    value = date,
+                    onDateSelected = { date = it },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                )
+                
+                TimePickerField(
+                    label = "时间",
+                    value = date,
+                    onTimeSelected = { date = it },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                )
+            }
             
             StatusSelector(
                 label = "状态",
@@ -294,46 +315,34 @@ fun AddConcertScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             
-            Text(
-                text = "票价",
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-            
             CurrencyField(
                 label = "票价",
                 value = ticketPrice,
                 onValueChange = { ticketPrice = it },
+                currency = ticketPriceCurrency,
+                onCurrencyChange = { ticketPriceCurrency = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
-            )
-            
-            Text(
-                text = "实付",
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 4.dp)
             )
             
             CurrencyField(
                 label = "实付",
                 value = actualPaid,
                 onValueChange = { actualPaid = it },
+                currency = actualPaidCurrency,
+                onCurrencyChange = { actualPaidCurrency = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
-            )
-            
-            Text(
-                text = "其他费用",
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 4.dp)
             )
             
             CurrencyField(
                 label = "其他费用",
                 value = otherFees,
                 onValueChange = { otherFees = it },
+                currency = otherFeesCurrency,
+                onCurrencyChange = { otherFeesCurrency = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -367,7 +376,7 @@ fun AddConcertScreen(
                         date = date,
                         notes = notes,
                         posterResId = initialConcert?.posterResId ?: 0,
-                        posterPath = if (posterPath.isNotEmpty()) posterPath else initialConcert?.posterPath,
+                        posterPath = posterPath.ifEmpty { initialConcert?.posterPath },
                         ticketPrice = ticketPrice,
                         ticketPriceCurrency = initialConcert?.ticketPriceCurrency ?: "CNY",
                         actualPaid = actualPaid,

@@ -1,5 +1,6 @@
 package com.ds.liverecorder.presentation.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ds.liverecorder.data.entity.ConcertEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -33,6 +32,7 @@ fun ConcertCard(
     date: Date,
     status: String,
     posterPath: String? = null,
+    @SuppressLint("ModifierParameter")
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -64,7 +64,8 @@ fun ConcertCard(
                 contentDescription = "演出海报",
                 modifier = Modifier
                     .width(100.dp)
-                    .height(150.dp)
+                    .height(150.dp), // 使用固定尺寸确保一致性
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop // 使用Crop模式确保海报填满空间
             )
             
             Column(

@@ -1,10 +1,10 @@
 package com.ds.liverecorder.presentation.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -28,11 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ds.liverecorder.data.entity.ConcertEntity
+import com.ds.liverecorder.data.viewmodel.ConcertViewModel
 import com.ds.liverecorder.presentation.component.PerformerTag
 import com.ds.liverecorder.presentation.component.PosterImage
 import com.ds.liverecorder.presentation.component.RatingBar
 import com.ds.liverecorder.presentation.component.concertViewModel
-import com.ds.liverecorder.data.viewmodel.ConcertViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -95,9 +95,8 @@ fun ConcertDetailContent(concert: ConcertEntity) {
                 imageUrl = concert.posterPath ?: "drawable resourceId",
                 contentDescription = "演出海报",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp) // 设置固定高度以确保海报正确展示
-                    .padding(0.dp)
+                    .fillMaxWidth(),
+                contentScale = androidx.compose.ui.layout.ContentScale.Fit // 完整展示海报
             )
         }
         
@@ -110,14 +109,6 @@ fun ConcertDetailContent(concert: ConcertEntity) {
                 .fillMaxWidth()
                 .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
         )
-        
-        // 评分
-        if (concert.rating > 0) {
-            RatingBar(
-                rating = concert.rating,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-        }
         
         // 日期和地点信息卡片
         Card(
@@ -188,15 +179,45 @@ fun ConcertDetailContent(concert: ConcertEntity) {
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 
-                DetailItem("票价", "${concert.ticketPrice} ${concert.ticketPriceCurrency}")
-                DetailItem("实付", "${concert.actualPaid} ${concert.actualPaidCurrency}")
-                DetailItem("其他", "${concert.otherFees} ${concert.otherFeesCurrency}")
+                // 分开展示票价信息，使用更美观的格式
+                DetailItem("票价：", "${formatPrice(concert.ticketPrice)} ${concert.ticketPriceCurrency}")
+                DetailItem("实付：", "${formatPrice(concert.actualPaid)} ${concert.actualPaidCurrency}")
+                DetailItem("其他：", "${formatPrice(concert.otherFees)} ${concert.otherFeesCurrency}")
             }
         }
         
-        // 演出者
+        // 评分
+        if (concert.rating > 0) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "我的评价",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    
+                    RatingBar(
+                        rating = concert.rating,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+        }
+        
+        // 阵容
         if (concert.performers.isNotEmpty()) {
-            SectionTitle("演出者")
+            SectionTitle("阵容")
             
             androidx.compose.foundation.layout.Row(
                 modifier = Modifier
@@ -254,15 +275,17 @@ fun SectionTitle(title: String) {
 
 @Composable
 fun DetailItem(label: String, value: String) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 16.dp)
+            .padding(vertical = 4.dp, horizontal = 16.dp),
+        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Start
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            modifier = Modifier.padding(end = 8.dp)
         )
         Text(
             text = value,
@@ -296,4 +319,22 @@ fun ConcertDetailScreenPreview() {
     )
     
     ConcertDetailContent(concert = concert)
+}
+
+// 添加价格格式化函数
+fun formatPrice(price: String): String {
+    return try {
+        if (price.isBlank()) {
+            "0.00"
+        } else {
+            val priceValue = price.toDoubleOrNull()
+            if (priceValue == null) {
+                "0.00"
+            } else {
+                "%.2f".format(priceValue)
+            }
+        }
+    } catch (e: Exception) {
+        "0.00"
+    }
 }

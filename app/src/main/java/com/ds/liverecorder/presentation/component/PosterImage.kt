@@ -1,12 +1,10 @@
 package com.ds.liverecorder.presentation.component
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,13 +16,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ds.liverecorder.R
 import java.io.File
@@ -33,7 +28,8 @@ import java.io.File
 fun PosterImage(
     imageUrl: String?,
     contentDescription: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Fit // 添加contentScale参数，默认为Fit以完整展示图片
 ) {
     Card(
         modifier = modifier
@@ -60,9 +56,8 @@ fun PosterImage(
                     bitmap = bitmap,
                     contentDescription = contentDescription,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    contentScale = ContentScale.Crop
+                        .fillMaxWidth(),
+                    contentScale = contentScale // 使用传入的contentScale参数
                 )
             } ?: run {
                 // 加载失败时显示占位符
@@ -91,23 +86,10 @@ fun PosterImage(
                     painter = painterResource(id = R.drawable.ic_launcher_background),
                     contentDescription = contentDescription,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    contentScale = ContentScale.Crop
+                        .fillMaxWidth(),
+                    contentScale = contentScale // 使用传入的contentScale参数
                 )
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PosterImagePreview() {
-    PosterImage(
-        imageUrl = null,
-        contentDescription = "演出海报",
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    )
 }

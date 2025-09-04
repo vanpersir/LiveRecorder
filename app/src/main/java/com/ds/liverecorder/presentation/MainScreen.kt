@@ -1,6 +1,5 @@
 package com.ds.liverecorder.presentation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
@@ -16,15 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ds.liverecorder.data.entity.ConcertEntity
-import com.ds.liverecorder.presentation.component.AddConcertFloatingActionButton
+import com.ds.liverecorder.data.viewmodel.ConcertViewModel
+import com.ds.liverecorder.presentation.component.concertViewModel
 import com.ds.liverecorder.presentation.navigation.AppNavigation
 import com.ds.liverecorder.presentation.navigation.Screen
 
@@ -34,6 +32,9 @@ fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Record.route
+
+    // 获取ViewModel实例
+    val viewModel: ConcertViewModel = concertViewModel()
     
     // 导航回调函数
     val onNavigateToDetail: (ConcertEntity) -> Unit = { concert ->
@@ -49,7 +50,7 @@ fun MainScreen() {
     }
     
     // 根据当前路由确定选中的导航项
-    var selectedItem by rememberSaveable {
+    var selectedItem by rememberSaveable { 
         mutableIntStateOf(
             when (currentRoute) {
                 Screen.Record.route -> 0
@@ -80,7 +81,6 @@ fun MainScreen() {
                     label = { Text("记录现场") },
                     selected = selectedItem == 0,
                     onClick = { 
-                        selectedItem = 0
                         navController.navigate(Screen.Record.route) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
@@ -92,7 +92,6 @@ fun MainScreen() {
                     label = { Text("待看") },
                     selected = selectedItem == 1,
                     onClick = { 
-                        selectedItem = 1
                         navController.navigate(Screen.Upcoming.route) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
@@ -113,7 +112,6 @@ fun MainScreen() {
                     label = { Text("印记") },
                     selected = selectedItem == 3,
                     onClick = { 
-                        selectedItem = 3
                         navController.navigate(Screen.Imprint.route) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
@@ -125,7 +123,6 @@ fun MainScreen() {
                     label = { Text("设置") },
                     selected = selectedItem == 4,
                     onClick = { 
-                        selectedItem = 4
                         navController.navigate(Screen.Settings.route) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
@@ -140,7 +137,8 @@ fun MainScreen() {
             navController = navController,
             contentPadding = innerPadding,
             onNavigateToDetail = onNavigateToDetail,
-            onNavigateToEdit = onNavigateToEdit
+            onNavigateToEdit = onNavigateToEdit,
+            viewModel = viewModel
         )
     }
 }

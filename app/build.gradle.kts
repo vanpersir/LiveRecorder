@@ -73,6 +73,9 @@ dependencies {
 
     // Gson
     implementation(libs.gson)
+        
+    // 添加WheelPicker库
+    implementation(libs.wheel.picker.compose)
     
     // FlexboxLayout用于演出者标签布局
     implementation(libs.flexbox)

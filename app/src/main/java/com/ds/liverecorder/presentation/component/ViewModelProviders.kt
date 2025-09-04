@@ -1,6 +1,5 @@
 package com.ds.liverecorder.presentation.component
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -15,8 +14,7 @@ inline fun <reified VM : ViewModel> concertViewModel(): VM {
     val context = LocalContext.current
     val database = ConcertDatabase.getDatabase(context)
     val concertDao = database.concertDao()
-    val performerDao = database.performerDao()
-    val repository = ConcertRepository(concertDao, performerDao)
+    val repository = ConcertRepository(concertDao)
     
     return viewModel(factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

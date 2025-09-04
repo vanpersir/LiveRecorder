@@ -1,49 +1,129 @@
 <resources>
-    <string name="app_name">LiveRecorder</string>
-    <string name="concert_poster">Concert poster</string>
-    <string name="location_icon">Location icon</string>
-    <string name="concert_detail_title">演出详情</string>
-    <string name="date_icon">Date icon</string>
+    <string name="app_name">演出记录</string>
+    <string name="concert_title">演出名称</string>
+    <string name="venue">场馆</string>
+    <string name="date_time">日期时间</string>
     <string name="ticket_price">票价</string>
     <string name="actual_paid">实付</string>
-    <string name="other_fees">其他</string>
-    <string name="_0_00_cny">0.00 CNY</string>
+    <string name="other_fees">其他费用</string>
+    <string name="performers">演出者</string>
+    <string name="guests">嘉宾</string>
+    <string name="notes">备注</string>
+    <string name="poster">海报</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="back">返回</string>
+    <string name="add_performer">添加演出者</string>
+    <string name="add_guest">添加嘉宾</string>
+    <string name="add_poster">添加海报</string>
+    <string name="take_photo">拍照</string>
+    <string name="choose_from_gallery">从相册选择</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="delete_confirmation">确定要删除这个演出记录吗？</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="add_concert">添加演出</string>
+    <string name="concert_detail">演出详情</string>
+    <string name="imprint">印记</string>
+    <string name="settings">设置</string>
+    <string name="upcoming">待看</string>
+    <string name="record">记录</string>
+    <string name="status">状态</string>
+    <string name="category">分类</string>
+    <string name="rating">评分</string>
+    
+    <!-- 添加缺失的字符串资源 -->
+    <string name="return_back">返回</string>
+    <string name="page_add">添加演出</string>
     <string name="quick_add">快速添加</string>
     <string name="add_methods">添加方式</string>
     <string name="basic_info">基本信息</string>
     <string name="perform_name">演出名称</string>
-    <string name="venue">场地</string>
-    <string name="choose_venue">选择场地</string>
-    <string name="date_time">日期时间</string>
-    <string name="date_time_hint">请选择日期时间</string>
-    <string name="add_poster">添加海报</string>
-    <string name="add_title">添加标题</string>
-    <string name="add_performers">添加演出者</string>
-    <string name="add_performer">添加阵容</string>
-    <string name="add_guest">添加嘉宾</string>
-    <string name="add_guests">添加嘉宾</string>
-    <string name="guests">嘉宾</string>
-    <string name="add_ps">添加备注</string>
-    <string name="save">保存</string>
-    <string name="performers">阵容</string>
-    <string name="edit">编辑</string>
-    <string name="delete">删除</string>
-    <string name="select_status_prompt">请选择演出状态</string>
+    <string name="choose_venue">选择场馆</string>
+    <string name="date_time_hint">请选择日期和时间</string>
+    <string name="select_status_prompt">请选择状态</string>
     <string name="select_category_prompt">请选择分类</string>
-    <string name="return_back">返回</string>
-    <string name="page_add">添加</string>
-    <string name="performer_name">Performer Name</string>
+    <string name="add_performers">添加演出者</string>
+    <string name="add_guests">添加嘉宾</string>
+    <string name="add_ticket_price">添加票价</string>
+    <string name="add_paid_price">添加实付金额</string>
+    <string name="add_other_price">添加其他费用</string>
+    <string name="add_seat_number">座位号</string>
+    <string name="add_ps">备注</string>
+    <string name="concert_poster">演出海报</string>
+    <string name="date_icon">日期图标</string>
+    <string name="location_icon">位置图标</string>
+    <string name="expenses">费用</string>
+    <string name="performer_name">演出者姓名</string>
     <string name="delete_performers">删除演出者</string>
     <string name="quick_evaluation">快速评价</string>
-    <string name="change_status">修改状态</string>
-    <string name="add_ticket_price">请输入票价</string>
-    <string name="add_paid_price">请输入实付票价</string>
-    <string name="add_other_price">请输入其他花费</string>
-    <string name="add_seat_number">请输入座位号</string>
-    <string name="expenses">花费</string>
-    <string name="待看">待看</string>
-    <string name="已看">已看</string>
-    <string name="已取消">已取消</string>
-    <string name="未赴约">未赴约</string>
-    <string name="待开票">待开票</string>
+    <string name="change_status">更改状态</string>
+    
+    <!-- 状态选项 -->
+    <string-array name="status_options">
+        <item>@string/concert_status_normal</item>
+        <item>@string/concert_status_ticket_pending</item>
+        <item>@string/concert_status_cancelled</item>
+        <item>@string/concert_status_no_show</item>
+    </string-array>
+    
+    <!-- 演出分类选项 -->
+    <string-array name="category_options">
+        <item>@string/concert_category_concert</item>
+        <item>@string/concert_category_music_festival</item>
+        <item>@string/concert_category_drama</item>
+        <item>@string/concert_category_musical</item>
+        <item>@string/concert_category_dance</item>
+        <item>@string/concert_category_crosstalk</item>
+        <item>@string/concert_category_opera</item>
+        <item>@string/concert_category_other</item>
+    </string-array>
+    
+    <!-- 货币选项 -->
+    <string-array name="currency_options">
+        <item>CNY</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>JPY</item>
+    </string-array>
+    
+    <string name="currency_cny">¥</string>
+    <string name="currency_usd">$</string>
+    <string name="currency_eur">€</string>
+    <string name="currency_gbp">£</string>
+    <string name="currency_jpy">¥</string>
+    
+    <string name="sample_concert_title">周杰伦嘉年华世界巡回演唱会</string>
+    <string name="sample_venue">北京鸟巢体育馆</string>
+    <string name="sample_performer">周杰伦</string>
+    <string name="sample_guest">派对动物</string>
+    <string name="sample_notes">期待已久的演唱会，一定要去！</string>
+    
+    <string name="concert_status_normal">正常</string>
+    <string name="concert_status_ticket_pending">待开票</string>
+    <string name="concert_status_cancelled">已取消</string>
+    <string name="concert_status_no_show">未赴约</string>
+    <string name="concert_status_watched">已看</string>
+    
+    <string name="concert_category_concert">演唱会</string>
+    <string name="concert_category_music_festival">音乐节</string>
+    <string name="concert_category_drama">话剧</string>
+    <string name="concert_category_musical">音乐剧</string>
+    <string name="concert_category_dance">舞蹈</string>
+    <string name="concert_category_crosstalk">相声</string>
+    <string name="concert_category_opera">戏曲</string>
+    <string name="concert_category_other">其他</string>
+    
+    <string name="upcoming_concerts_title">待看演出</string>
+    <string name="past_concerts_title">已看演出</string>
+    <string name="all_concerts_title">全部演出</string>
+    <string name="unknown">未知</string>
+    <string name="days_until_format">%d天后</string>
+    <string name="days_ago_format">%d天前</string>
+    <string name="today">今天</string>
+    <string name="choose_date">选择日期</string>
+    <string name="choose_time">选择时间</string>
 </resources>

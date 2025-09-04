@@ -46,7 +46,7 @@ fun RecordScreen(
 ) {
     val concerts by viewModel.getAllConcertsFlow().collectAsState(initial = emptyList())
     var displayMode by remember { mutableStateOf("card") } // card, timeline, poster
-    var filterStatus by remember { mutableStateOf("全部") } // 全部, 待看, 已看, 待开票, 已取消
+    var filterStatus by remember { mutableStateOf("全部") } // 全部, 正常, 待开票, 已取消, 未赴约
     var searchQuery by remember { mutableStateOf("") } // 搜索关键词
     var showModeDropdown by remember { mutableStateOf(false) } // 控制下拉框显示状态
     
@@ -72,11 +72,11 @@ fun RecordScreen(
             actions = {
                 IconButton(onClick = { 
                     filterStatus = when (filterStatus) {
-                        "全部" -> "待看"
-                        "待看" -> "已看"
-                        "已看" -> "待开票"
+                        "全部" -> "正常"
+                        "正常" -> "待开票"
                         "待开票" -> "已取消"
-                        "已取消" -> "全部"
+                        "已取消" -> "未赴约"
+                        "未赴约" -> "全部"
                         else -> "全部"
                     }
                 }) {

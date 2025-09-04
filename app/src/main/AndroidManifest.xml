@@ -22,27 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <!-- 保留原有的Activity声明，但标记为非启动项 -->
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.LiveRecorder" />
-            
-        <activity
-            android:name=".ui.ConcertDetailActivity"
-            android:exported="false"
-            android:theme="@style/Theme.LiveRecorder" />
-            
-        <activity
-            android:name=".ui.ConcertListActivity"
-            android:exported="false"
-            android:theme="@style/Theme.LiveRecorder" />
-            
-        <activity
-            android:name=".ui.AddConcertDialogFragment"
-            android:exported="false"
-            android:theme="@style/Theme.LiveRecorder" />
     </application>
 
 </manifest>
