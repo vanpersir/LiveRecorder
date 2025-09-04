@@ -366,37 +366,6 @@ fun AddConcertScreen(
                     .padding(bottom = 16.dp),
                 maxLines = 3
             )
-            
-            Button(
-                onClick = {
-                    val concert = ConcertEntity(
-                        id = initialConcert?.id ?: 0,
-                        title = title,
-                        venue = venue,
-                        date = date,
-                        notes = notes,
-                        posterResId = initialConcert?.posterResId ?: 0,
-                        posterPath = posterPath.ifEmpty { initialConcert?.posterPath },
-                        ticketPrice = ticketPrice,
-                        ticketPriceCurrency = initialConcert?.ticketPriceCurrency ?: "CNY",
-                        actualPaid = actualPaid,
-                        actualPaidCurrency = initialConcert?.actualPaidCurrency ?: "CNY",
-                        otherFees = otherFees,
-                        otherFeesCurrency = initialConcert?.otherFeesCurrency ?: "CNY",
-                        performers = if (performers.isNotEmpty()) performers.split(",").map { it.trim() } else listOf(),
-                        guests = if (guests.isNotEmpty()) guests.split(",").map { it.trim() } else listOf(),
-                        status = status,
-                        category = category,
-                        rating = rating
-                    )
-                    onSave(concert)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(if (isEditMode) "更新" else "保存")
-            }
         }
     }
 }
