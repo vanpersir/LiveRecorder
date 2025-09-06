@@ -52,7 +52,6 @@ fun AppNavigation(
         composable(Screen.Add.route) { 
             val viewModel: AddConcertViewModel = concertViewModel()
             AddConcertScreen(
-                viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onSave = { concert ->
                     viewModel.addConcert(concert)

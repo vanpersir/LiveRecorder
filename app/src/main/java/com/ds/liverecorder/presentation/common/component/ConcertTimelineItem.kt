@@ -26,7 +26,6 @@ fun ConcertTimelineItem(
     title: String,
     venue: String,
     date: Date,
-    status: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -98,7 +97,6 @@ fun ConcertTimelineItemPreview() {
     ConcertTimelineItem(
         title = "演出名称",
         venue = "演出场地",
-        date = Date(),
-        status = "待看"
+        date = Date()
     )
 }

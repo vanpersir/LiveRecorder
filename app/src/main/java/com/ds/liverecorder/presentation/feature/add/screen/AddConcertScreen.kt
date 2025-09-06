@@ -2,7 +2,6 @@ package com.ds.liverecorder.presentation.feature.add.screen
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -43,8 +42,6 @@ import com.ds.liverecorder.presentation.common.component.PosterImage
 import com.ds.liverecorder.presentation.common.component.RatingBar
 import com.ds.liverecorder.presentation.common.component.StatusSelector
 import com.ds.liverecorder.presentation.common.component.TimePickerField
-import com.ds.liverecorder.presentation.common.provider.concertViewModel
-import com.ds.liverecorder.presentation.viewmodel.AddConcertViewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Date
@@ -52,7 +49,6 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddConcertScreen(
-    viewModel: AddConcertViewModel = concertViewModel(),
     onBack: () -> Unit = {},
     onSave: (Concert) -> Unit = {},
     initialConcert: Concert? = null
@@ -75,14 +71,12 @@ fun AddConcertScreen(
     var posterPath by remember { mutableStateOf(initialConcert?.posterPath ?: "") }
     
     val context = LocalContext.current
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    
+
     // 图片选择器
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
-            selectedImageUri = it
             // 保存图片到内部存储
             try {
                 val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

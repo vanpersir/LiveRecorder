@@ -94,7 +94,7 @@ fun ConcertDetailContent(concert: Concert) {
             shape = MaterialTheme.shapes.medium
         ) {
             PosterImage(
-                imageUrl = concert.posterPath ?: "drawable resourceId",
+                imageUrl = concert.posterPath,
                 contentDescription = "演出海报",
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -126,7 +126,7 @@ fun ConcertDetailContent(concert: Concert) {
                     .padding(16.dp)
             ) {
                 // 日期
-                androidx.compose.foundation.layout.Row(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
@@ -144,7 +144,7 @@ fun ConcertDetailContent(concert: Concert) {
                 }
                 
                 // 地点
-                androidx.compose.foundation.layout.Row(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
@@ -220,8 +220,8 @@ fun ConcertDetailContent(concert: Concert) {
         // 阵容
         if (concert.performers.isNotEmpty()) {
             SectionTitle("阵容")
-            
-            androidx.compose.foundation.layout.Row(
+
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -239,8 +239,8 @@ fun ConcertDetailContent(concert: Concert) {
         // 嘉宾
         if (concert.guests.isNotEmpty()) {
             SectionTitle("嘉宾")
-            
-            androidx.compose.foundation.layout.Row(
+
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -336,7 +336,7 @@ fun formatPrice(price: String): String {
                 "%.2f".format(priceValue)
             }
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         "0.00"
     }
 }

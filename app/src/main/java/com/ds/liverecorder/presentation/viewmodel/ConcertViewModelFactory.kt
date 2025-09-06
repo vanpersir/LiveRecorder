@@ -9,7 +9,7 @@ import com.ds.liverecorder.domain.usecase.*
  * ViewModel工厂类
  */
 class ConvertViewModelFactory(
-    private val concertRepository: ConcertRepository
+    concertRepository: ConcertRepository
 ) : ViewModelProvider.Factory {
     
     // 创建统一的业务逻辑入口

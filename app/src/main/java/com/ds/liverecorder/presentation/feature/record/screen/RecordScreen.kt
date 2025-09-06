@@ -186,7 +186,6 @@ fun RecordScreen(
                                     title = concert.title,
                                     venue = concert.venue,
                                     date = concert.date,
-                                    status = concert.status,
                                     onClick = { onNavigateToDetail(concert) }
                                 )
                             }
@@ -199,7 +198,6 @@ fun RecordScreen(
                                     title = concert.title,
                                     date = concert.date,
                                     venue = concert.venue,
-                                    status = concert.status,
                                     posterPath = concert.posterPath,
                                     onClick = { onNavigateToDetail(concert) }
                                 )

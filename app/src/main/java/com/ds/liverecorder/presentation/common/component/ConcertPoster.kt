@@ -29,7 +29,6 @@ fun ConcertPoster(
     title: String,
     date: Date,
     venue: String,
-    status: String,
     posterPath: String? = null,
     @SuppressLint("ModifierParameter")
     modifier: Modifier = Modifier,
@@ -112,7 +111,6 @@ fun ConcertPosterPreview() {
     ConcertPoster(
         title = "演出名称",
         date = Date(),
-        venue = "演出场地",
-        status = "待看"
+        venue = "演出场地"
     )
 }
