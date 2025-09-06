@@ -20,9 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ds.liverecorder.data.entity.ConcertEntity
-import com.ds.liverecorder.data.viewmodel.ConcertViewModel
-import com.ds.liverecorder.presentation.component.concertViewModel
+import com.ds.liverecorder.domain.model.Concert
 import com.ds.liverecorder.presentation.navigation.AppNavigation
 import com.ds.liverecorder.presentation.navigation.Screen
 
@@ -33,15 +31,12 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: Screen.Record.route
 
-    // 获取ViewModel实例
-    val viewModel: ConcertViewModel = concertViewModel()
-    
     // 导航回调函数
-    val onNavigateToDetail: (ConcertEntity) -> Unit = { concert ->
+    val onNavigateToDetail: (Concert) -> Unit = { concert ->
         navController.navigate(Screen.ConcertDetail.createRoute(concert.id))
     }
     
-    val onNavigateToEdit: (ConcertEntity) -> Unit = { concert ->
+    val onNavigateToEdit: (Concert) -> Unit = { concert ->
         navController.navigate(Screen.EditConcert.createRoute(concert.id))
     }
     
@@ -137,8 +132,7 @@ fun MainScreen() {
             navController = navController,
             contentPadding = innerPadding,
             onNavigateToDetail = onNavigateToDetail,
-            onNavigateToEdit = onNavigateToEdit,
-            viewModel = viewModel
+            onNavigateToEdit = onNavigateToEdit
         )
     }
 }
