@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -24,7 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,8 +49,8 @@ fun UpcomingScreen(
         concert.date.after(java.util.Date())
     }
 
-    var displayMode by remember { mutableStateOf("card") } // timeline, card, poster - 统一默认为卡片视图
-    var showModeDropdown by remember { mutableStateOf(false) } // 控制下拉框显示状态
+    var displayMode by rememberSaveable { mutableStateOf("card") } // timeline, card, poster - 统一默认为卡片视图
+    var showModeDropdown by rememberSaveable { mutableStateOf(false) } // 控制下拉框显示状态
     
     Column(
         modifier = Modifier.fillMaxSize()
@@ -62,7 +62,7 @@ fun UpcomingScreen(
                     when (displayMode) {
                         "card" -> Icon(Icons.Filled.GridView, contentDescription = "卡片视图")
                         "timeline" -> Icon(Icons.Filled.ViewModule, contentDescription = "时间线视图")
-                        "poster" -> Icon(Icons.Filled.List, contentDescription = "海报视图")
+                        "poster" -> Icon(Icons.AutoMirrored.Filled.List, contentDescription = "海报视图")
                         else -> Icon(Icons.Filled.GridView, contentDescription = "卡片视图")
                     }
                 }
@@ -94,7 +94,7 @@ fun UpcomingScreen(
                             displayMode = "poster"
                             showModeDropdown = false
                         },
-                        leadingIcon = { Icon(Icons.Filled.List, contentDescription = null) }
+                        leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }
                     )
                 }
             }

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)  // 添加KSP插件
     alias(libs.plugins.kotlin.compose) // 添加Compose Compiler插件
 }
 
@@ -69,7 +69,7 @@ dependencies {
     // Room数据库
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)  // 将kapt替换为ksp
 
     // Gson
     implementation(libs.gson)
@@ -90,6 +90,12 @@ dependencies {
     implementation(libs.compose.material.icons.extended)
     implementation(libs.navigation.compose)
     implementation(libs.lifecycle.viewmodel.compose)
+    
+    // Retrofit for network requests
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     
     // 测试
     testImplementation(libs.junit)

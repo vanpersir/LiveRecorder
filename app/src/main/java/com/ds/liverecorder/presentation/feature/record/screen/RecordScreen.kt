@@ -1,5 +1,6 @@
 package com.ds.liverecorder.presentation.feature.record.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,9 +11,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -26,7 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,10 +48,11 @@ fun RecordScreen(
     onNavigateToDetail: (Concert) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var displayMode by remember { mutableStateOf("card") } // card, timeline, poster
-    var filterStatus by remember { mutableStateOf("全部") } // 全部, 正常, 待开票, 已取消, 未赴约
-    var searchQuery by remember { mutableStateOf("") } // 搜索关键词
-    var showModeDropdown by remember { mutableStateOf(false) } // 控制下拉框显示状态
+    var displayMode by rememberSaveable { mutableStateOf("card") } // card, timeline, poster
+    var filterStatus by rememberSaveable { mutableStateOf("全部") } // 全部, 正常, 待开票, 已取消, 未赴约
+    var searchQuery by rememberSaveable { mutableStateOf("") } // 搜索关键词
+    var showModeDropdown by rememberSaveable { mutableStateOf(false) } // 控制下拉框显示状态
+    var showSearchBar by rememberSaveable { mutableStateOf(false) } // 控制搜索栏显示状态
     
     // 根据筛选条件过滤演出列表
     val filteredConcerts = uiState.concerts
@@ -71,6 +74,11 @@ fun RecordScreen(
         TopAppBar(
             title = { Text("演出记录") },
             actions = {
+                // 搜索图标按钮
+                IconButton(onClick = { showSearchBar = !showSearchBar }) {
+                    Icon(Icons.Filled.Search, contentDescription = "搜索")
+                }
+                
                 IconButton(onClick = { 
                     filterStatus = when (filterStatus) {
                         "全部" -> "正常"
@@ -88,7 +96,7 @@ fun RecordScreen(
                     when (displayMode) {
                         "card" -> Icon(Icons.Filled.GridView, contentDescription = "卡片视图")
                         "timeline" -> Icon(Icons.Filled.ViewModule, contentDescription = "时间线视图")
-                        "poster" -> Icon(Icons.Filled.List, contentDescription = "海报视图")
+                        "poster" -> Icon(Icons.AutoMirrored.Filled.List, contentDescription = "海报视图")
                         else -> Icon(Icons.Filled.GridView, contentDescription = "卡片视图")
                     }
                 }
@@ -120,7 +128,7 @@ fun RecordScreen(
                             displayMode = "poster"
                             showModeDropdown = false
                         },
-                        leadingIcon = { Icon(Icons.Filled.List, contentDescription = null) }
+                        leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }
                     )
                 }
             }
@@ -131,12 +139,20 @@ fun RecordScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // 搜索栏
-            SearchBar(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = "搜索演出、场地、演出者..."
-            )
+            // 下拉式搜索栏
+            if (showSearchBar) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    SearchBar(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        placeholder = "搜索演出、场地、演出者..."
+                    )
+                }
+            }
             
             // 显示当前筛选状态
             if (filterStatus != "全部") {

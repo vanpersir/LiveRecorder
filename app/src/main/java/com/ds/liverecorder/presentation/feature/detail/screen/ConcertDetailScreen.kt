@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -28,12 +28,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ds.liverecorder.presentation.viewmodel.ConcertDetailViewModel
 import com.ds.liverecorder.domain.model.Concert
 import com.ds.liverecorder.presentation.common.component.PerformerTag
 import com.ds.liverecorder.presentation.common.component.PosterImage
 import com.ds.liverecorder.presentation.common.component.RatingBar
 import com.ds.liverecorder.presentation.common.provider.concertViewModel
+import com.ds.liverecorder.presentation.viewmodel.ConcertDetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -58,7 +58,7 @@ fun ConcertDetailScreen(
             title = { Text(uiState.concert?.title ?: "演出详情") },
             navigationIcon = {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                 }
             },
             actions = {
