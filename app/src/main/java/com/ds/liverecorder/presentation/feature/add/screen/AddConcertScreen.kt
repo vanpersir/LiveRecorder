@@ -17,7 +17,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,33 +49,50 @@ import com.ds.liverecorder.presentation.common.component.PosterImage
 import com.ds.liverecorder.presentation.common.component.RatingBar
 import com.ds.liverecorder.presentation.common.component.StatusSelector
 import com.ds.liverecorder.presentation.common.component.TimePickerField
+import com.ds.liverecorder.presentation.common.provider.concertViewModel
+import com.ds.liverecorder.presentation.feature.add.component.link.LinkParserDialog
+import com.ds.liverecorder.presentation.viewmodel.AddConcertViewModel
 import java.io.File
 import java.io.FileOutputStream
-import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddConcertScreen(
     onBack: () -> Unit = {},
     onSave: (Concert) -> Unit = {},
-    initialConcert: Concert? = null
+    initialConcert: Concert? = null,
+    viewModel: AddConcertViewModel = concertViewModel()
 ) {
-    var title by remember { mutableStateOf(initialConcert?.title ?: "") }
-    var venue by remember { mutableStateOf(initialConcert?.venue ?: "") }
-    var date by remember { mutableStateOf(initialConcert?.date ?: Date()) }
-    var notes by remember { mutableStateOf(initialConcert?.notes ?: "") }
-    var ticketPrice by remember { mutableStateOf(initialConcert?.ticketPrice ?: "") }
-    var actualPaid by remember { mutableStateOf(initialConcert?.actualPaid ?: "") }
-    var otherFees by remember { mutableStateOf(initialConcert?.otherFees ?: "") }
-    var ticketPriceCurrency by remember { mutableStateOf(initialConcert?.ticketPriceCurrency ?: "CNY") }
-    var actualPaidCurrency by remember { mutableStateOf(initialConcert?.actualPaidCurrency ?: "CNY") }
-    var otherFeesCurrency by remember { mutableStateOf(initialConcert?.otherFeesCurrency ?: "CNY") }
-    var status by remember { mutableStateOf(initialConcert?.status ?: "") }
-    var category by remember { mutableStateOf(initialConcert?.category ?: "") }
-    var performers by remember { mutableStateOf(initialConcert?.performers?.joinToString(", ") ?: "") }
-    var guests by remember { mutableStateOf(initialConcert?.guests?.joinToString(", ") ?: "") }
-    var rating by remember { mutableStateOf(initialConcert?.rating ?: 0) }
-    var posterPath by remember { mutableStateOf(initialConcert?.posterPath ?: "") }
+    // 初始化演出信息
+    LaunchedEffect(initialConcert) {
+        viewModel.setInitialConcert(initialConcert)
+    }
+    
+    val uiState by viewModel::uiState
+    val isParsingLink = uiState.isParsingLink
+    val linkParseError = uiState.linkParseError
+    val id = uiState.id
+    val title = uiState.title
+    val venue = uiState.venue
+    val date = uiState.date
+    val notes = uiState.notes
+    val posterPath = uiState.posterPath
+    val ticketPrice = uiState.ticketPrice
+    val ticketPriceCurrency = uiState.ticketPriceCurrency
+    val actualPaid = uiState.actualPaid
+    val actualPaidCurrency = uiState.actualPaidCurrency
+    val otherFees = uiState.otherFees
+    val otherFeesCurrency = uiState.otherFeesCurrency
+    val performers = uiState.performers
+    val guests = uiState.guests
+    val status = uiState.status
+    val category = uiState.category
+    val rating = uiState.rating
+    
+    // 快速添加下拉菜单状态
+    var showQuickAddMenu by remember { mutableStateOf(false) }
+    // 链接解析弹窗状态
+    var showLinkParserDialog by remember { mutableStateOf(false) }
     
     val context = LocalContext.current
 
@@ -92,7 +116,7 @@ fun AddConcertScreen(
                 FileOutputStream(file).use { out ->
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
                 }
-                posterPath = file.absolutePath
+                viewModel.updatePosterPath(file.absolutePath)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -115,27 +139,37 @@ fun AddConcertScreen(
             },
             actions = {
                 IconButton(onClick = {
-                    val concert = Concert(
-                        id = initialConcert?.id ?: 0,
-                        title = title,
-                        venue = venue,
-                        date = date,
-                        notes = notes,
-                        posterResId = initialConcert?.posterResId ?: 0,
-                        posterPath = posterPath,
-                        ticketPrice = ticketPrice,
-                        ticketPriceCurrency = ticketPriceCurrency,
-                        actualPaid = actualPaid,
-                        actualPaidCurrency = actualPaidCurrency,
-                        otherFees = otherFees,
-                        otherFeesCurrency = otherFeesCurrency,
-                        performers = performers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
-                        guests = guests.split(",").map { it.trim() }.filter { it.isNotEmpty() },
-                        status = status,
-                        category = category,
-                        rating = rating
+                    // 保存演出
+                    viewModel.saveConcert(
+                        onSuccess = {
+                            // 创建一个临时的Concert对象用于返回
+                            val concert = Concert(
+                                id = id,
+                                title = title,
+                                venue = venue,
+                                date = date,
+                                notes = notes,
+                                posterResId = 0,
+                                posterPath = posterPath,
+                                ticketPrice = ticketPrice,
+                                ticketPriceCurrency = ticketPriceCurrency,
+                                actualPaid = actualPaid,
+                                actualPaidCurrency = actualPaidCurrency,
+                                otherFees = otherFees,
+                                otherFeesCurrency = otherFeesCurrency,
+                                performers = performers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
+                                guests = guests.split(",").map { it.trim() }.filter { it.isNotEmpty() },
+                                status = status,
+                                category = category,
+                                rating = rating
+                            )
+                            onSave(concert)
+                        },
+                        onError = { errorMessage ->
+                            // 处理错误情况
+                            // 这里可以显示错误提示
+                        }
                     )
-                    onSave(concert)
                 }) {
                     Icon(Icons.Filled.Check, contentDescription = "保存")
                 }
@@ -154,15 +188,70 @@ fun AddConcertScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             
-            OutlinedTextField(
-                value = "",
-                onValueChange = { },
-                label = { Text("复制/链接/识图/排期等") },
+            // 将原来的OutlinedTextField替换为带下拉菜单的按钮
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                textStyle = MaterialTheme.typography.bodyMedium
-            )
+                    .padding(bottom = 16.dp)
+            ) {
+                Button(
+                    onClick = { showQuickAddMenu = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("复制/链接/识图/排期等")
+                }
+                
+                DropdownMenu(
+                    expanded = showQuickAddMenu,
+                    onDismissRequest = { showQuickAddMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("复制演出") },
+                        onClick = { 
+                            // TODO: 实现复制演出功能
+                            showQuickAddMenu = false
+                        },
+                        leadingIcon = { Icon(Icons.Filled.ContentCopy, contentDescription = null) }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("解析链接") },
+                        onClick = { 
+                            showQuickAddMenu = false
+                            showLinkParserDialog = true
+                        },
+                        leadingIcon = { Icon(Icons.Filled.Link, contentDescription = null) }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("图片识别") },
+                        onClick = { 
+                            // TODO: 实现图片识别功能
+                            showQuickAddMenu = false
+                        },
+                        leadingIcon = { Icon(Icons.Filled.Image, contentDescription = null) }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("排期") },
+                        onClick = { 
+                            // TODO: 实现排期功能
+                            showQuickAddMenu = false
+                        },
+                        leadingIcon = { Icon(Icons.Filled.Schedule, contentDescription = null) }
+                    )
+                }
+            }
+            
+            // 链接解析弹窗
+            if (showLinkParserDialog) {
+                LinkParserDialog(
+                    onDismissRequest = { showLinkParserDialog = false },
+                    onConcertParsed = { link ->
+                        viewModel.parseLink(link)
+                        showLinkParserDialog = false
+                    },
+                    isParsing = isParsingLink,
+                    errorMessage = linkParseError
+                )
+            }
             
             Text(
                 text = "基础信息",
@@ -172,7 +261,7 @@ fun AddConcertScreen(
             
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = { viewModel.updateTitle(it) },
                 label = { Text("演出名称") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -181,7 +270,7 @@ fun AddConcertScreen(
             
             OutlinedTextField(
                 value = venue,
-                onValueChange = { venue = it },
+                onValueChange = { viewModel.updateVenue(it) },
                 label = { Text("场地") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -198,7 +287,7 @@ fun AddConcertScreen(
                 DatePickerField(
                     label = "日期",
                     value = date,
-                    onDateSelected = { date = it },
+                    onDateSelected = { viewModel.updateDate(it) },
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp)
@@ -207,7 +296,7 @@ fun AddConcertScreen(
                 TimePickerField(
                     label = "时间",
                     value = date,
-                    onTimeSelected = { date = it },
+                    onTimeSelected = { viewModel.updateDate(it) },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
@@ -217,7 +306,7 @@ fun AddConcertScreen(
             StatusSelector(
                 label = "状态",
                 value = status,
-                onValueChange = { status = it },
+                onValueChange = { viewModel.updateStatus(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
@@ -226,7 +315,7 @@ fun AddConcertScreen(
             CategorySelector(
                 label = "分类",
                 value = category,
-                onValueChange = { category = it },
+                onValueChange = { viewModel.updateCategory(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -262,7 +351,7 @@ fun AddConcertScreen(
             
             OutlinedTextField(
                 value = performers,
-                onValueChange = { performers = it },
+                onValueChange = { viewModel.updatePerformers(it) },
                 label = { Text("添加演出者") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -286,7 +375,7 @@ fun AddConcertScreen(
             
             OutlinedTextField(
                 value = guests,
-                onValueChange = { guests = it },
+                onValueChange = { viewModel.updateGuests(it) },
                 label = { Text("添加嘉宾") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -310,7 +399,7 @@ fun AddConcertScreen(
             
             RatingBar(
                 rating = rating,
-                onRatingChanged = { rating = it },
+                onRatingChanged = { viewModel.updateRating(it) },
                 isEditable = true,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -318,9 +407,9 @@ fun AddConcertScreen(
             CurrencyField(
                 label = "票价",
                 value = ticketPrice,
-                onValueChange = { ticketPrice = it },
+                onValueChange = { viewModel.updateTicketPrice(it) },
                 currency = ticketPriceCurrency,
-                onCurrencyChange = { ticketPriceCurrency = it },
+                onCurrencyChange = { viewModel.updateTicketPriceCurrency(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -329,9 +418,9 @@ fun AddConcertScreen(
             CurrencyField(
                 label = "实付",
                 value = actualPaid,
-                onValueChange = { actualPaid = it },
+                onValueChange = { viewModel.updateActualPaid(it) },
                 currency = actualPaidCurrency,
-                onCurrencyChange = { actualPaidCurrency = it },
+                onCurrencyChange = { viewModel.updateActualPaidCurrency(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -340,13 +429,14 @@ fun AddConcertScreen(
             CurrencyField(
                 label = "其他费用",
                 value = otherFees,
-                onValueChange = { otherFees = it },
+                onValueChange = { viewModel.updateOtherFees(it) },
                 currency = otherFeesCurrency,
-                onCurrencyChange = { otherFeesCurrency = it },
+                onCurrencyChange = { viewModel.updateOtherFeesCurrency(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
+            
             
             OutlinedTextField(
                 value = "",
@@ -359,7 +449,7 @@ fun AddConcertScreen(
             
             OutlinedTextField(
                 value = notes,
-                onValueChange = { notes = it },
+                onValueChange = { viewModel.updateNotes(it) },
                 label = { Text("备注") },
                 modifier = Modifier
                     .fillMaxWidth()

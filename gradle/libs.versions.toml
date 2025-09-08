@@ -10,6 +10,7 @@ room = "2.6.1"      # 升级Room到稳定版本
 compose = "1.7.0"
 composeCompiler = "1.7.0"
 wheelPicker = "1.1.11"  # 更新WheelPicker-Compose库版本
+jsoup = "1.21.2"
 
 [libraries]
 # Android核心
@@ -35,6 +36,7 @@ lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-lived
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 
 # Room数据库
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

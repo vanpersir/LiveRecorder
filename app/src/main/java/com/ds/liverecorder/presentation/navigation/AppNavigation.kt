@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ds.liverecorder.domain.model.Concert
+import com.ds.liverecorder.presentation.common.provider.concertViewModel
 import com.ds.liverecorder.presentation.feature.add.screen.AddConcertScreen
 import com.ds.liverecorder.presentation.feature.add.screen.ConcertDetailScreen
 import com.ds.liverecorder.presentation.feature.add.screen.EditConcertScreen
@@ -17,10 +18,10 @@ import com.ds.liverecorder.presentation.feature.imprint.screen.ImprintScreen
 import com.ds.liverecorder.presentation.feature.record.screen.RecordScreen
 import com.ds.liverecorder.presentation.feature.settings.screen.SettingsScreen
 import com.ds.liverecorder.presentation.feature.upcoming.screen.UpcomingScreen
-import com.ds.liverecorder.presentation.common.provider.concertViewModel
 import com.ds.liverecorder.presentation.viewmodel.AddConcertViewModel
 import com.ds.liverecorder.presentation.viewmodel.ConcertDetailViewModel
 import com.ds.liverecorder.presentation.viewmodel.ConcertListViewModel
+import com.ds.liverecorder.presentation.viewmodel.ImprintViewModel
 
 @Composable
 fun AppNavigation(
@@ -54,13 +55,15 @@ fun AppNavigation(
             AddConcertScreen(
                 onBack = { navController.popBackStack() },
                 onSave = { concert ->
-                    viewModel.addConcert(concert)
-                    navController.popBackStack()
+                    viewModel.saveConcert(
+                        onSuccess = { navController.popBackStack() },
+                        onError = { /* 处理错误 */ }
+                    )
                 }
             )
         }
         composable(Screen.Imprint.route) { 
-            val viewModel: ConcertListViewModel = concertViewModel()
+            val viewModel: ImprintViewModel = concertViewModel()
             ImprintScreen(viewModel = viewModel)
         }
         composable(Screen.Settings.route) { 
@@ -95,8 +98,10 @@ fun AppNavigation(
                 viewModel = detailViewModel,
                 onBack = { navController.popBackStack() },
                 onUpdate = { concert ->
-                    addViewModel.updateConcert(concert)
-                    navController.popBackStack()
+                    addViewModel.saveConcert(
+                        onSuccess = { navController.popBackStack() },
+                        onError = { /* 处理错误 */ }
+                    )
                 }
             )
         }
