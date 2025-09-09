@@ -111,7 +111,7 @@ fun AddConcertScreen(
                 }
                 
                 // 创建文件保存图片
-                val fileName = "poster_${System.currentTimeMillis()}.jpg"
+                val fileName = "posters/poster_${System.currentTimeMillis()}.jpg"
                 val file = File(context.filesDir, fileName)
                 FileOutputStream(file).use { out ->
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
@@ -140,36 +140,29 @@ fun AddConcertScreen(
             actions = {
                 IconButton(onClick = {
                     // 保存演出
-                    viewModel.saveConcert(
-                        onSuccess = {
-                            // 创建一个临时的Concert对象用于返回
-                            val concert = Concert(
-                                id = id,
-                                title = title,
-                                venue = venue,
-                                date = date,
-                                notes = notes,
-                                posterResId = 0,
-                                posterPath = posterPath,
-                                ticketPrice = ticketPrice,
-                                ticketPriceCurrency = ticketPriceCurrency,
-                                actualPaid = actualPaid,
-                                actualPaidCurrency = actualPaidCurrency,
-                                otherFees = otherFees,
-                                otherFeesCurrency = otherFeesCurrency,
-                                performers = performers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
-                                guests = guests.split(",").map { it.trim() }.filter { it.isNotEmpty() },
-                                status = status,
-                                category = category,
-                                rating = rating
-                            )
-                            onSave(concert)
-                        },
-                        onError = { errorMessage ->
-                            // 处理错误情况
-                            // 这里可以显示错误提示
-                        }
+                    // 直接调用onSave回调，避免重复调用viewModel.saveConcert
+                    // 创建一个临时的Concert对象用于返回
+                    val concert = Concert(
+                        id = id,
+                        title = title,
+                        venue = venue,
+                        date = date,
+                        notes = notes,
+                        posterResId = 0,
+                        posterPath = posterPath,
+                        ticketPrice = ticketPrice,
+                        ticketPriceCurrency = ticketPriceCurrency,
+                        actualPaid = actualPaid,
+                        actualPaidCurrency = actualPaidCurrency,
+                        otherFees = otherFees,
+                        otherFeesCurrency = otherFeesCurrency,
+                        performers = performers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
+                        guests = guests.split(",").map { it.trim() }.filter { it.isNotEmpty() },
+                        status = status,
+                        category = category,
+                        rating = rating
                     )
+                    onSave(concert)
                 }) {
                     Icon(Icons.Filled.Check, contentDescription = "保存")
                 }

@@ -170,12 +170,13 @@ class AddConcertViewModel(
             try {
                 val concert = parseConcertLinkUseCase(link)
                 if (concert != null) {
-                    // 更新UI状态
+                    // 更新UI状态，但不保存到数据库，避免重复创建演出对象
                     uiState = uiState.copy(
                         title = concert.title,
                         venue = concert.venue,
                         date = concert.date,
                         notes = concert.notes,
+                        posterPath = concert.posterPath, // 确保海报路径也被更新
                         ticketPrice = concert.ticketPrice,
                         ticketPriceCurrency = concert.ticketPriceCurrency,
                         actualPaid = concert.actualPaid,

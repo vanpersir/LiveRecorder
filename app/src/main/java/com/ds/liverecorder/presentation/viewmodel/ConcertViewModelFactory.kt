@@ -14,7 +14,7 @@ import com.ds.liverecorder.domain.usecase.ParseConcertLinkUseCase
  */
 class ConvertViewModelFactory(
     concertRepository: ConcertRepository,
-    private val concertLinkParserRepository: ConcertLinkParserRepository,
+    concertLinkParserRepository: ConcertLinkParserRepository,
     exchangeRateRepository: ExchangeRateRepository
 ) : ViewModelProvider.Factory {
     
@@ -40,6 +40,12 @@ class ConvertViewModelFactory(
                 AddConcertViewModel(
                     concertUseCases,
                     parseConcertLinkUseCase
+                ) as T
+            }
+            modelClass.isAssignableFrom(ImprintViewModel::class.java) -> {
+                ImprintViewModel(
+                    concertUseCases,
+                    exchangeRateUseCase
                 ) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

@@ -58,12 +58,14 @@ class ShowStartWebViewLoader(private val context: Context) {
             // 设置WebView客户端
             webView.webViewClient = object : WebViewClient() {
                 private var interceptedRequest: WebResourceRequest? = null
+                private var isProcessing = false // 添加标志防止重复处理
 
                 override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
                     val url = request.url.toString()
                     
-                    // 检查是否是目标详情页请求
-                    if (url.contains(TARGET_URL)) {
+                    // 检查是否是目标详情页请求，并且尚未处理过
+                    if (url.contains(TARGET_URL) && !isProcessing) {
+                        isProcessing = true // 标记为正在处理
                         interceptedRequest = request
                         
                         // 在后台线程获取并打印响应内容
@@ -276,6 +278,17 @@ class ShowStartWebViewLoader(private val context: Context) {
                     } else {
                         Log.d(TAG, "Response body (first 2500 chars): ${responseBody.take(2500)}")
                         Log.d(TAG, "Response body (last 2500 chars): ${responseBody.takeLast(2500)}")
+                    }
+                    
+                    // 解析演出信息并下载海报图片
+                    ConcertInfoParser.parseConcertFromJsonWithLocalPoster(responseBody, context) { concert ->
+                        if (concert != null) {
+                            Log.d(TAG, "Successfully parsed concert: ${concert.title}")
+                            deferredConcert.complete(concert)
+                        } else {
+                            Log.e(TAG, "Failed to parse concert from response")
+                            deferredConcert.complete(null)
+                        }
                     }
                 } else {
                     Log.d(TAG, "Response body is null")
