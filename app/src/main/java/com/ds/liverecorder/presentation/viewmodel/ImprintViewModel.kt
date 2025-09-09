@@ -87,14 +87,14 @@ class ImprintViewModel(
         viewModelScope.launch {
             try {
                 val watchedConcerts = concerts.value.filter { 
-                    it.status == "正常" && it.date.before(Date()) 
+                    it.status == "正常"
                 }
                 
                 val totalSpent = watchedConcerts.sumOf { concert ->
                     val amount = concert.actualPaid.toDoubleOrNull() ?: 0.0
                     val sourceCurrency = concert.actualPaidCurrency.uppercase()
                     val targetCurrency = uiState.selectedCurrency
-                    
+
                     // 如果源货币和目标货币相同，直接返回
                     if (sourceCurrency == targetCurrency) {
                         amount
@@ -105,7 +105,7 @@ class ImprintViewModel(
                             fromCurrency = sourceCurrency,
                             toCurrency = targetCurrency
                         )
-                        
+
                         convertedAmount ?: amount // 如果转换失败，使用原始金额
                     }
                 }

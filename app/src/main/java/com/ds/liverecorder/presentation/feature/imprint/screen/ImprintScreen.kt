@@ -61,6 +61,13 @@ fun ImprintScreen(
         viewModel.updateSelectedCurrency(uiState.selectedCurrency)
     }
     
+    // 页面加载时计算总花费
+    LaunchedEffect(concerts) {
+        if (concerts.isNotEmpty()) {
+            viewModel.updateSelectedCurrency(uiState.selectedCurrency)
+        }
+    }
+    
     // 按年份统计
     val concertsByYear = viewModel.getConcertsByYear()
     
