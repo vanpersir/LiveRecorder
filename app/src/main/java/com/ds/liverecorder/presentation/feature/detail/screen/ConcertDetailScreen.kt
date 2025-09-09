@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,22 +19,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ds.liverecorder.R
 import com.ds.liverecorder.domain.model.Concert
 import com.ds.liverecorder.presentation.common.component.PerformerTag
 import com.ds.liverecorder.presentation.common.component.PosterImage
 import com.ds.liverecorder.presentation.common.component.RatingBar
 import com.ds.liverecorder.presentation.common.provider.concertViewModel
 import com.ds.liverecorder.presentation.viewmodel.ConcertDetailViewModel
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -51,6 +59,53 @@ fun ConcertDetailScreen(
     viewModel.loadConcert(concertId)
     val uiState by viewModel.uiState.collectAsState()
     
+    // 删除确认对话框状态
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    
+    // 处理删除操作
+    val handleDelete = { concertId: Long ->
+        uiState.concert?.posterPath?.let { posterPath ->
+            try {
+                // 删除海报文件
+                val posterFile = File(posterPath)
+                if (posterFile.exists()) {
+                    posterFile.delete()
+                }
+            } catch (e: Exception) {
+                // 忽略删除文件时的异常
+                e.printStackTrace()
+            }
+        }
+        onDelete(concertId)
+    }
+    
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("删除演出") },
+            text = { Text("确定要删除这场演出吗？此操作无法撤销。") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        uiState.concert?.id?.let { id ->
+                            handleDelete(id)
+                        }
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("确定")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -65,7 +120,7 @@ fun ConcertDetailScreen(
                 IconButton(onClick = { uiState.concert?.let { onEdit(it) } }) {
                     Icon(Icons.Filled.Edit, contentDescription = "编辑")
                 }
-                IconButton(onClick = { uiState.concert?.id?.let { id -> onDelete(id) } }) {
+                IconButton(onClick = { showDeleteDialog = true }) {
                     Icon(Icons.Filled.Delete, contentDescription = "删除")
                 }
             }
