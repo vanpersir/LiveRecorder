@@ -1,6 +1,7 @@
 package com.ds.liverecorder.presentation.feature.detail.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -115,7 +116,12 @@ fun ConcertDetailScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         TopAppBar(
-            title = { Text(uiState.concert?.title ?: "演出详情") },
+            title = {
+                Text(
+                    text = uiState.concert?.title ?: "演出详情",
+                    modifier = Modifier.basicMarquee(),
+                )
+            },
             navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
