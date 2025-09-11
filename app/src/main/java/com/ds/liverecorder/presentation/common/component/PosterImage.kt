@@ -43,7 +43,20 @@ fun PosterImage(
                 try {
                     val file = File(imageUrl)
                     if (file.exists()) {
-                        val bitmap = BitmapFactory.decodeFile(imageUrl)
+                        // 首先获取图片尺寸信息
+                        val options = BitmapFactory.Options().apply {
+                            inJustDecodeBounds = true
+                        }
+                        BitmapFactory.decodeFile(imageUrl, options)
+                        
+                        // 计算缩放比例，将图片缩小到合适尺寸以避免内存溢出
+                        val scale = calculateInSampleSize(options, 1024, 1024)
+                        
+                        // 实际加载图片
+                        val decodeOptions = BitmapFactory.Options().apply {
+                            inSampleSize = scale
+                        }
+                        val bitmap = BitmapFactory.decodeFile(imageUrl, decodeOptions)
                         imageBitmap = bitmap?.asImageBitmap()
                     }
                 } catch (e: Exception) {
@@ -92,4 +105,31 @@ fun PosterImage(
             }
         }
     }
+}
+
+/**
+ * 计算图片缩放比例
+ *
+ * @param options BitmapFactory.Options 包含原始图片信息
+ * @param reqWidth 所需宽度
+ * @param reqHeight 所需高度
+ * @return 缩放比例
+ */
+fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    // 原始图片的宽度和高度
+    val height = options.outHeight
+    val width = options.outWidth
+    var inSampleSize = 1
+
+    if (height > reqHeight || width > reqWidth) {
+        val halfHeight = height / 2
+        val halfWidth = width / 2
+
+        // 计算最大inSampleSize值，使得图片尺寸大于等于目标尺寸
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+
+    return inSampleSize
 }

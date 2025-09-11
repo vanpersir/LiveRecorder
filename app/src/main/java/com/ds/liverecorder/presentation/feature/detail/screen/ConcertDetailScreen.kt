@@ -1,6 +1,10 @@
-package com.ds.liverecorder.presentation.feature.add.screen
+package com.ds.liverecorder.presentation.feature.detail.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -132,6 +137,10 @@ fun ConcertDetailScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalLayoutApi::class
+)
 @Composable
 fun ConcertDetailContent(concert: Concert) {
     Column(
@@ -185,7 +194,7 @@ fun ConcertDetailContent(concert: Concert) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = android.R.drawable.ic_menu_my_calendar),
@@ -201,7 +210,7 @@ fun ConcertDetailContent(concert: Concert) {
                 // 地点
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = android.R.drawable.ic_menu_mylocation),
@@ -276,16 +285,17 @@ fun ConcertDetailContent(concert: Concert) {
         if (concert.performers.isNotEmpty()) {
             SectionTitle("阵容")
 
-            Row(
+            FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.Start
             ) {
                 concert.performers.forEach { performer ->
                     PerformerTag(
                         name = performer,
                         modifier = Modifier
-                            .padding(end = 4.dp)
+                            .padding(end = 4.dp, bottom = 4.dp)
                     )
                 }
             }
@@ -295,16 +305,17 @@ fun ConcertDetailContent(concert: Concert) {
         if (concert.guests.isNotEmpty()) {
             SectionTitle("嘉宾")
 
-            Row(
+            FlowRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.Start
             ) {
                 concert.guests.forEach { guest ->
                     PerformerTag(
                         name = guest,
                         modifier = Modifier
-                            .padding(end = 4.dp)
+                            .padding(end = 4.dp, bottom = 4.dp)
                     )
                 }
             }
@@ -336,7 +347,7 @@ fun DetailItem(label: String, value: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 16.dp),
-        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Start
+        horizontalArrangement = Arrangement.Start
     ) {
         Text(
             text = label,

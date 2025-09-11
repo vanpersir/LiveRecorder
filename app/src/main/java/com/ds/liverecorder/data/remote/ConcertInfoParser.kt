@@ -65,17 +65,19 @@ object ConcertInfoParser {
             val guests = mutableListOf<String>()
             val sessionUserInfos = result.optJSONArray("sessionUserInfos")
             if (sessionUserInfos != null && sessionUserInfos.length() > 0) {
-                val userInfos = sessionUserInfos.getJSONObject(0).optJSONArray("userInfos")
-                if (userInfos != null) {
-                    for (i in 0 until userInfos.length()) {
-                        val userInfo = userInfos.getJSONObject(i)
-                        val roleType = userInfo.optInt("roleType", 1)
-                        val performerName = userInfo.optString("name", "")
-                        if (performerName.isNotEmpty()) {
-                            if (roleType == 1) {
-                                performers.add(performerName)
-                            } else if (roleType == 2) {
-                                guests.add(performerName)
+                for (i in 0 until sessionUserInfos.length()) {
+                    val userInfos = sessionUserInfos.getJSONObject(i).optJSONArray("userInfos")
+                    if (userInfos != null) {
+                        for (j in 0 until userInfos.length()) {
+                            val userInfo = userInfos.getJSONObject(j)
+                            val roleType = userInfo.optInt("roleType", 1)
+                            val performerName = userInfo.optString("name", "")
+                            if (performerName.isNotEmpty()) {
+                                if (roleType == 1) {
+                                    performers.add(performerName)
+                                } else if (roleType == 2) {
+                                    guests.add(performerName)
+                                }
                             }
                         }
                     }

@@ -12,8 +12,8 @@ import androidx.navigation.navArgument
 import com.ds.liverecorder.domain.model.Concert
 import com.ds.liverecorder.presentation.common.provider.concertViewModel
 import com.ds.liverecorder.presentation.feature.add.screen.AddConcertScreen
-import com.ds.liverecorder.presentation.feature.add.screen.ConcertDetailScreen
 import com.ds.liverecorder.presentation.feature.add.screen.EditConcertScreen
+import com.ds.liverecorder.presentation.feature.detail.screen.ConcertDetailScreen
 import com.ds.liverecorder.presentation.feature.imprint.screen.ImprintScreen
 import com.ds.liverecorder.presentation.feature.record.screen.RecordScreen
 import com.ds.liverecorder.presentation.feature.settings.screen.SettingsScreen

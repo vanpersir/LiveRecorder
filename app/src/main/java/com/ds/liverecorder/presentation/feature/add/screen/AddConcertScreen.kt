@@ -156,8 +156,8 @@ fun AddConcertScreen(
                         actualPaidCurrency = actualPaidCurrency,
                         otherFees = otherFees,
                         otherFeesCurrency = otherFeesCurrency,
-                        performers = performers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
-                        guests = guests.split(",").map { it.trim() }.filter { it.isNotEmpty() },
+                        performers = performers.split(";").map { it.trim() }.filter { it.isNotEmpty() },
+                        guests = guests.split(";").map { it.trim() }.filter { it.isNotEmpty() },
                         status = status,
                         category = category,
                         rating = rating

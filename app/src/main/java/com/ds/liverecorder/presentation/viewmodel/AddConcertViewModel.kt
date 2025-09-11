@@ -183,8 +183,8 @@ class AddConcertViewModel(
                         actualPaidCurrency = concert.actualPaidCurrency,
                         otherFees = concert.otherFees,
                         otherFeesCurrency = concert.otherFeesCurrency,
-                        performers = concert.performers.joinToString(", "),
-                        guests = concert.guests.joinToString(", "),
+                        performers = concert.performers.joinToString("; "),
+                        guests = concert.guests.joinToString("; "),
                         status = concert.status,
                         category = concert.category,
                         rating = concert.rating,
@@ -225,10 +225,10 @@ class AddConcertViewModel(
                     actualPaidCurrency = uiState.actualPaidCurrency,
                     otherFees = uiState.otherFees,
                     otherFeesCurrency = uiState.otherFeesCurrency,
-                    performers = uiState.performers.split(",")
+                    performers = uiState.performers.split(";")
                         .map { it.trim() }
                         .filter { it.isNotEmpty() },
-                    guests = uiState.guests.split(",")
+                    guests = uiState.guests.split(";")
                         .map { it.trim() }
                         .filter { it.isNotEmpty() },
                     status = uiState.status,
