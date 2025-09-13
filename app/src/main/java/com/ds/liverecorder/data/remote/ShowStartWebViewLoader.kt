@@ -38,7 +38,6 @@ class ShowStartWebViewLoader(private val context: Context) {
      * @return 解析出的演出信息
      */
     suspend fun parseLinkWithWebView(link: String): Concert? {
-        Log.d(TAG, "Starting WebView parsing for link: $link")
         return kotlinx.coroutines.withContext(Dispatchers.Main) {
             val deferredConcert = CompletableDeferred<Concert?>()
             val webView = WebView(context)
@@ -105,7 +104,6 @@ class ShowStartWebViewLoader(private val context: Context) {
                 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    Log.d(TAG, "Page finished loading: $url")
                     
                     if (view != null) {
                         // 记录WebView详细信息
@@ -270,16 +268,6 @@ class ShowStartWebViewLoader(private val context: Context) {
             if (response.isSuccessful) {
                 val responseBody = response.body?.string()
                 if (responseBody != null) {
-                    Log.d(TAG, "Response body length: ${responseBody.length}")
-                    
-                    // 打印响应体内容（限制长度以避免日志过大）
-                    if (responseBody.length <= 5000) {
-                        Log.d(TAG, "Response body: $responseBody")
-                    } else {
-                        Log.d(TAG, "Response body (first 2500 chars): ${responseBody.take(2500)}")
-                        Log.d(TAG, "Response body (last 2500 chars): ${responseBody.takeLast(2500)}")
-                    }
-                    
                     // 解析演出信息并下载海报图片
                     ConcertInfoParser.parseConcertFromJsonWithLocalPoster(responseBody, context) { concert ->
                         if (concert != null) {
@@ -354,34 +342,6 @@ class ShowStartWebViewLoader(private val context: Context) {
             Log.w(TAG, "Error constructing possible JSON data from URL: $url", e)
         }
         
-        return null
-    }
-
-    /**
-     * 从URL中提取活动ID
-     */
-    private fun extractActivityIdFromUrl(url: String): String? {
-        Log.d(TAG, "Extracting activity ID from URL: $url")
-        
-        // 匹配 activityId 参数
-        val activityIdPattern = Pattern.compile("[?&]activityId=(\\d+)")
-        val activityIdMatcher = activityIdPattern.matcher(url)
-        if (activityIdMatcher.find()) {
-            val id = activityIdMatcher.group(1)
-            Log.d(TAG, "Extracted activityId from URL parameter: $id")
-            return id
-        }
-        
-        // 匹配 /event/ 后面的数字ID
-        val eventIdPattern = Pattern.compile("/event/(\\d+)")
-        val eventIdMatcher = eventIdPattern.matcher(url)
-        if (eventIdMatcher.find()) {
-            val id = eventIdMatcher.group(1)
-            Log.d(TAG, "Extracted eventId from URL path: $id")
-            return id
-        }
-        
-        Log.d(TAG, "No activity ID found in URL")
         return null
     }
 

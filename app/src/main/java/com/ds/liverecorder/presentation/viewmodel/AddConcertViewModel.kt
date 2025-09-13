@@ -164,11 +164,11 @@ class AddConcertViewModel(
     /**
      * 解析链接
      */
-    fun parseLink(link: String) {
+    fun parseLink(sharedText: String) {
         viewModelScope.launch {
             uiState = uiState.copy(isParsingLink = true, linkParseError = null)
             try {
-                val concert = parseConcertLinkUseCase(link)
+                val concert = parseConcertLinkUseCase(sharedText)
                 if (concert != null) {
                     // 更新UI状态，但不保存到数据库，避免重复创建演出对象
                     uiState = uiState.copy(

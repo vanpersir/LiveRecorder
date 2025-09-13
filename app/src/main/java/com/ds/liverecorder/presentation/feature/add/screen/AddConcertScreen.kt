@@ -237,8 +237,8 @@ fun AddConcertScreen(
             if (showLinkParserDialog) {
                 LinkParserDialog(
                     onDismissRequest = { showLinkParserDialog = false },
-                    onConcertParsed = { link ->
-                        viewModel.parseLink(link)
+                    onConcertParsed = { sharedText ->
+                        viewModel.parseLink(sharedText)
                         showLinkParserDialog = false
                     },
                     isParsing = isParsingLink,

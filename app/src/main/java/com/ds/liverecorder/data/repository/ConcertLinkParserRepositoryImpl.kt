@@ -41,10 +41,8 @@ class ConcertLinkParserRepositoryImpl(private val context: Context) : ConcertLin
      * @return 解析出的演出信息
      */
     private suspend fun parseShowStartLink(link: String): Concert? {
-        Log.d(TAG, "Parsing ShowStart link: $link")
         return try {
-            // 首先尝试使用WebView方式解析
-            Log.d(TAG, "Attempting to parse with WebView")
+            // 使用WebView方式解析
             parseShowStartLinkWithWebView(link)
         } catch (e: Exception) {
             Log.e(TAG, "ShowStart WebView parsing failed", e)
@@ -57,10 +55,8 @@ class ConcertLinkParserRepositoryImpl(private val context: Context) : ConcertLin
      * @return 解析出的演出信息
      */
     private suspend fun parseShowStartLinkWithWebView(link: String): Concert? {
-        Log.d(TAG, "Starting ShowStart WebView parsing")
         val webViewLoader = ShowStartWebViewLoader(context)
         val result = webViewLoader.parseLinkWithWebView(link)
-        Log.d(TAG, "WebView parsing result: $result")
         return result
     }
 
