@@ -20,6 +20,13 @@ class ConcertListViewModel(
     private val _uiState = MutableStateFlow(ConcertListUiState())
     val uiState: StateFlow<ConcertListUiState> = _uiState
     
+    // 为不同屏幕提供独立的 displayMode 状态管理
+    private val _recordDisplayMode = MutableStateFlow("card") // 演出记录默认为卡片视图
+    val recordDisplayMode: StateFlow<String> = _recordDisplayMode
+    
+    private val _upcomingDisplayMode = MutableStateFlow("card") // 待看演出默认为卡片视图
+    val upcomingDisplayMode: StateFlow<String> = _upcomingDisplayMode
+    
     init {
         loadConcerts()
     }
@@ -86,6 +93,16 @@ class ConcertListViewModel(
                     }
             }
         }
+    }
+    
+    // 为演出记录屏幕设置 displayMode 的方法
+    fun setRecordDisplayMode(mode: String) {
+        _recordDisplayMode.value = mode
+    }
+    
+    // 为待看演出屏幕设置 displayMode 的方法
+    fun setUpcomingDisplayMode(mode: String) {
+        _upcomingDisplayMode.value = mode
     }
 }
 

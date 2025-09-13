@@ -1,5 +1,6 @@
 package com.ds.liverecorder.presentation.common.provider
 
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -15,14 +16,16 @@ import com.ds.liverecorder.presentation.viewmodel.ConvertViewModelFactory
 
 @Composable
 inline fun <reified VM : ViewModel> concertViewModel(): VM {
-    val context = LocalContext.current
-    val database = ConcertDatabase.getDatabase(context)
+    val activity = LocalContext.current as? ComponentActivity
+        ?: error("LocalContext must be a ComponentActivity")
+    
+    val database = ConcertDatabase.getDatabase(activity)
     val concertDao = database.concertDao()
     val repository: ConcertRepository = ConcertRepositoryImpl(concertDao)
-    val linkParserRepository: ConcertLinkParserRepository = ConcertLinkParserRepositoryImpl(context)
+    val linkParserRepository: ConcertLinkParserRepository = ConcertLinkParserRepositoryImpl(activity)
     val exchangeRateRepository: ExchangeRateRepository = ExchangeRateRepositoryImpl()
     
     val factory = ConvertViewModelFactory(repository, linkParserRepository, exchangeRateRepository)
     
-    return viewModel(factory = factory)
+    return viewModel(viewModelStoreOwner = activity, factory = factory)
 }

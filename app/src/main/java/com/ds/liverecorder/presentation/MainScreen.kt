@@ -41,7 +41,10 @@ fun MainScreen() {
     }
     
     val onNavigateToAdd: () -> Unit = {
-        navController.navigate(Screen.Add.route)
+        navController.navigate(Screen.Add.route) {
+            popUpTo(navController.graph.startDestinationId)
+            launchSingleTop = true
+        }
     }
     
     // 根据当前路由确定选中的导航项

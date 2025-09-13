@@ -48,7 +48,9 @@ fun RecordScreen(
     onNavigateToDetail: (Concert) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var displayMode by rememberSaveable { mutableStateOf("card") } // card, timeline, poster
+    val displayMode by viewModel.recordDisplayMode.collectAsState() // 从 ViewModel 获取 recordDisplayMode
+    
+    // 使用 remember 保存其他状态，这些状态暂时不需要在 ViewModel 中管理
     var filterStatus by rememberSaveable { mutableStateOf("全部") } // 全部, 正常, 待开票, 已取消, 未赴约
     var searchQuery by rememberSaveable { mutableStateOf("") } // 搜索关键词
     var showModeDropdown by rememberSaveable { mutableStateOf(false) } // 控制下拉框显示状态
@@ -109,7 +111,7 @@ fun RecordScreen(
                     DropdownMenuItem(
                         text = { Text("卡片视图") },
                         onClick = { 
-                            displayMode = "card"
+                            viewModel.setRecordDisplayMode("card") // 通过 ViewModel 设置 recordDisplayMode
                             showModeDropdown = false
                         },
                         leadingIcon = { Icon(Icons.Filled.GridView, contentDescription = null) }
@@ -117,7 +119,7 @@ fun RecordScreen(
                     DropdownMenuItem(
                         text = { Text("时间线视图") },
                         onClick = { 
-                            displayMode = "timeline"
+                            viewModel.setRecordDisplayMode("timeline") // 通过 ViewModel 设置 recordDisplayMode
                             showModeDropdown = false
                         },
                         leadingIcon = { Icon(Icons.Filled.ViewModule, contentDescription = null) }
@@ -125,7 +127,7 @@ fun RecordScreen(
                     DropdownMenuItem(
                         text = { Text("海报视图") },
                         onClick = { 
-                            displayMode = "poster"
+                            viewModel.setRecordDisplayMode("poster") // 通过 ViewModel 设置 recordDisplayMode
                             showModeDropdown = false
                         },
                         leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }

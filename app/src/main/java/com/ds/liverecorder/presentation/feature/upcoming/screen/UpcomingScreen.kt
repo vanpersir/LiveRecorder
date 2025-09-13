@@ -43,13 +43,13 @@ fun UpcomingScreen(
     onNavigateToDetail: (Concert) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val displayMode by viewModel.upcomingDisplayMode.collectAsState() // 从 ViewModel 获取 upcomingDisplayMode
     
     // 只显示即将到来的演出
     val upcomingConcerts = uiState.concerts.filter { concert ->
         concert.date.after(java.util.Date())
     }
 
-    var displayMode by rememberSaveable { mutableStateOf("card") } // timeline, card, poster - 统一默认为卡片视图
     var showModeDropdown by rememberSaveable { mutableStateOf(false) } // 控制下拉框显示状态
     
     Column(
@@ -75,7 +75,7 @@ fun UpcomingScreen(
                     DropdownMenuItem(
                         text = { Text("卡片视图") },
                         onClick = { 
-                            displayMode = "card"
+                            viewModel.setUpcomingDisplayMode("card") // 通过 ViewModel 设置 upcomingDisplayMode
                             showModeDropdown = false
                         },
                         leadingIcon = { Icon(Icons.Filled.GridView, contentDescription = null) }
@@ -83,7 +83,7 @@ fun UpcomingScreen(
                     DropdownMenuItem(
                         text = { Text("时间线视图") },
                         onClick = { 
-                            displayMode = "timeline"
+                            viewModel.setUpcomingDisplayMode("timeline") // 通过 ViewModel 设置 upcomingDisplayMode
                             showModeDropdown = false
                         },
                         leadingIcon = { Icon(Icons.Filled.ViewModule, contentDescription = null) }
@@ -91,7 +91,7 @@ fun UpcomingScreen(
                     DropdownMenuItem(
                         text = { Text("海报视图") },
                         onClick = { 
-                            displayMode = "poster"
+                            viewModel.setUpcomingDisplayMode("poster") // 通过 ViewModel 设置 upcomingDisplayMode
                             showModeDropdown = false
                         },
                         leadingIcon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null) }
