@@ -53,27 +53,10 @@ fun CurrencyField(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OutlinedTextField(
-                value = amount,
-                onValueChange = { newValue ->
-                    // 只允许输入数字和小数点
-                    if (newValue.all { it.isDigit() || it == '.' }) {
-                        amount = newValue
-                        onValueChange(newValue)
-                    }
-                },
-                label = { Text("金额") },
-                modifier = Modifier
-                    .weight(3f) // 调整权重为3，确保价格输入框占据更多空间
-                    .padding(end = 8.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal
-                )
-            )
-            
             ExposedDropdownMenuBox(
                 expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier.weight(1f) // 将weight移到ExposedDropdownMenuBox上
             ) {
                 OutlinedTextField( // 改为OutlinedTextField以保持一致性
                     readOnly = true,
@@ -83,7 +66,6 @@ fun CurrencyField(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
                         .menuAnchor()
-                        .weight(1f) // 调整权重为1，减少货币选择框占用空间
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
@@ -101,6 +83,24 @@ fun CurrencyField(
                     }
                 }
             }
+
+            OutlinedTextField(
+                value = amount,
+                onValueChange = { newValue ->
+                    // 只允许输入数字和小数点
+                    if (newValue.all { it.isDigit() || it == '.' }) {
+                        amount = newValue
+                        onValueChange(newValue)
+                    }
+                },
+                label = { Text("金额") },
+                modifier = Modifier
+                    .weight(3f) // 保持3f的权重
+                    .padding(end = 8.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal
+                )
+            )
         }
     }
 }
