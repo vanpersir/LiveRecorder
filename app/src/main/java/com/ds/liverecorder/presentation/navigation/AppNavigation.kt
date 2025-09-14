@@ -64,7 +64,10 @@ fun AppNavigation(
         }
         composable(Screen.Imprint.route) { 
             val viewModel: ImprintViewModel = concertViewModel()
-            ImprintScreen(viewModel = viewModel)
+            ImprintScreen(
+                viewModel = viewModel,
+                onNavigateToDetail = onNavigateToDetail
+            )
         }
         composable(Screen.Settings.route) { 
             SettingsScreen()

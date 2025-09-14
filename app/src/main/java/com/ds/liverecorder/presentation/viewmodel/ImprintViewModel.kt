@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.ds.liverecorder.domain.model.Concert
 import com.ds.liverecorder.domain.usecase.ConcertUseCases
 import com.ds.liverecorder.domain.usecase.ExchangeRateUseCase
+import com.ds.liverecorder.presentation.feature.imprint.screen.ImprintDisplayMode
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -27,6 +29,9 @@ class ImprintViewModel(
     // UI状态
     var uiState by mutableStateOf(ImprintUiState())
         private set
+
+    private val _displayMode = MutableStateFlow(ImprintDisplayMode.STATISTICS) // 演出记录默认为卡片视图
+    val displayMode: StateFlow<ImprintDisplayMode> = _displayMode
     
     // 获取所有演出数据
     val concerts: StateFlow<List<Concert>> = concertUseCases.getAllConcerts()
@@ -40,6 +45,13 @@ class ImprintViewModel(
     init {
         loadConcerts()
         loadExchangeRates()
+    }
+    
+    /**
+     * 更新显示模式
+     */
+    fun updateDisplayMode(mode: ImprintDisplayMode) {
+        _displayMode.value = mode
     }
     
     /**

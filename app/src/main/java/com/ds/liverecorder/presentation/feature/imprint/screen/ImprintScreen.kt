@@ -18,9 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ds.liverecorder.domain.model.Concert
 import com.ds.liverecorder.presentation.common.component.StatItem
 import com.ds.liverecorder.presentation.common.provider.concertViewModel
+import com.ds.liverecorder.presentation.feature.imprint.component.CalendarView
 import com.ds.liverecorder.presentation.feature.imprint.component.DataOverviewCard
 import com.ds.liverecorder.presentation.viewmodel.ImprintViewModel
 import java.util.Date
@@ -42,13 +40,12 @@ enum class ImprintDisplayMode {
 
 @Composable
 fun ImprintScreen(
-    viewModel: ImprintViewModel = concertViewModel()
+    viewModel: ImprintViewModel = concertViewModel(),
+    onNavigateToDetail: (Concert) -> Unit = {}
 ) {
     val concerts by viewModel.concerts.collectAsStateWithLifecycle()
+    val displayMode by viewModel.displayMode.collectAsStateWithLifecycle()
     viewModel.uiState
-    
-    // 当前展示模式状态
-    var displayMode by remember { mutableStateOf(ImprintDisplayMode.STATISTICS) }
     
     // 货币单位选择状态
 
@@ -78,6 +75,7 @@ fun ImprintScreen(
         }
     }
     
+    
     // 按年份统计
     val concertsByYear = viewModel.getConcertsByYear()
     
@@ -104,7 +102,7 @@ fun ImprintScreen(
             // 模式选择按钮
             Row {
                 IconButton(
-                    onClick = { displayMode = ImprintDisplayMode.CALENDAR }
+                    onClick = { viewModel.updateDisplayMode(ImprintDisplayMode.CALENDAR) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.CalendarMonth,
@@ -116,7 +114,7 @@ fun ImprintScreen(
                     )
                 }
                 IconButton(
-                    onClick = { displayMode = ImprintDisplayMode.MAP }
+                    onClick = { viewModel.updateDisplayMode(ImprintDisplayMode.MAP) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Map,
@@ -128,7 +126,7 @@ fun ImprintScreen(
                     )
                 }
                 IconButton(
-                    onClick = { displayMode = ImprintDisplayMode.STATISTICS }
+                    onClick = { viewModel.updateDisplayMode(ImprintDisplayMode.STATISTICS) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.BarChart,
@@ -145,24 +143,10 @@ fun ImprintScreen(
         // 根据不同模式显示不同内容
         when (displayMode) {
             ImprintDisplayMode.CALENDAR -> {
-                // TODO: 实现日历视图
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = "日历模式",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        Text("日历视图内容待实现")
-                    }
-                }
+                CalendarView(
+                    concerts = concerts,
+                    onConcertClick = onNavigateToDetail
+                )
             }
             
             ImprintDisplayMode.MAP -> {
