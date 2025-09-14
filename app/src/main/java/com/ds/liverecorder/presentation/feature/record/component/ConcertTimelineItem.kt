@@ -37,6 +37,7 @@ fun ConcertTimelineItem(
         else -> "今天"
     }
 
+    // 暂时没有找到合适的颜色，后续再处理
     val daysTextColor = when {
         daysDiff >= 0 -> Color(0xFFA52A2A)
         else -> Color(0xFF8B8000)
@@ -64,7 +65,7 @@ fun ConcertTimelineItem(
                     text = SimpleDateFormat("yyyy-MM-dd HH:mm EEEE", Locale.getDefault()).format(date),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
-                    color = daysTextColor
+                    color = MaterialTheme.colorScheme.secondary
                 )
 
                 Card(
@@ -77,7 +78,7 @@ fun ConcertTimelineItem(
                     Text(
                         text = daysText,
                         style = MaterialTheme.typography.labelSmall,
-                        color = daysTextColor,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
