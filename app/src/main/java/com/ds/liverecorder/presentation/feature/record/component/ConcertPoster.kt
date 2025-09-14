@@ -1,4 +1,4 @@
-package com.ds.liverecorder.presentation.common.component
+package com.ds.liverecorder.presentation.feature.record.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ds.liverecorder.presentation.common.component.PosterImage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -30,10 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ds.liverecorder.domain.model.Concert
-import com.ds.liverecorder.presentation.common.component.ConcertCard
-import com.ds.liverecorder.presentation.common.component.ConcertPoster
-import com.ds.liverecorder.presentation.common.component.ConcertTimelineItem
 import com.ds.liverecorder.presentation.common.provider.concertViewModel
+import com.ds.liverecorder.presentation.feature.record.component.ConcertCard
+import com.ds.liverecorder.presentation.feature.record.component.ConcertPoster
+import com.ds.liverecorder.presentation.feature.record.component.ConcertTimelineItem
 import com.ds.liverecorder.presentation.viewmodel.ConcertListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -140,7 +140,6 @@ fun UpcomingScreen(
                                     title = concert.title,
                                     venue = concert.venue,
                                     date = concert.date,
-                                    status = concert.status,
                                     posterPath = concert.posterPath,
                                     onClick = { onNavigateToDetail(concert) }
                                 )

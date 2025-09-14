@@ -1,7 +1,6 @@
-package com.ds.liverecorder.presentation.common.component
+package com.ds.liverecorder.presentation.feature.record.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +37,11 @@ fun ConcertTimelineItem(
         else -> "今天"
     }
 
+    val daysTextColor = when {
+        daysDiff >= 0 -> Color(0xFFA52A2A)
+        else -> Color(0xFF8B8000)
+    }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -52,40 +57,37 @@ fun ConcertTimelineItem(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                // horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date),
+                    text = SimpleDateFormat("yyyy-MM-dd HH:mm EEEE", Locale.getDefault()).format(date),
                     style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = daysTextColor
                 )
 
-                Text(
-                    text = daysText,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                )
+                Card(
+                    modifier = Modifier.padding(4.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                    )
+                ) {
+                    Text(
+                        text = daysText,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = daysTextColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
             }
 
             Text(
-                text = title,
+                text = "${venue}.${title}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Text(
-                text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Text(
-                text = venue,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 2.dp)
             )
         }
     }

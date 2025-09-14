@@ -1,4 +1,4 @@
-package com.ds.liverecorder.presentation.common.component
+package com.ds.liverecorder.presentation.feature.record.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ds.liverecorder.presentation.common.component.PosterImage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,7 +32,6 @@ fun ConcertCard(
     title: String,
     venue: String,
     date: Date,
-    status: String,
     posterPath: String? = null,
     @SuppressLint("ModifierParameter")
     modifier: Modifier = Modifier,
@@ -83,7 +83,7 @@ fun ConcertCard(
                 )
                 
                 Text(
-                    text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date),
+                    text = SimpleDateFormat("yyyy-MM-dd HH:mm EEEE", Locale.getDefault()).format(date),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -101,19 +101,20 @@ fun ConcertCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = daysText,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(4.dp)
-                    )
-                    
-                    Text(
-                        text = status,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    Card(
+                        modifier = Modifier.padding(4.dp),
+                        shape = MaterialTheme.shapes.small,
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                        )
+                    ) {
+                        Text(
+                            text = daysText,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                 }
             }
         }
@@ -126,7 +127,6 @@ fun ConcertCardPreview() {
     ConcertCard(
         title = "演出名称",
         venue = "演出场地",
-        date = Date(),
-        status = "待看"
+        date = Date()
     )
 }
