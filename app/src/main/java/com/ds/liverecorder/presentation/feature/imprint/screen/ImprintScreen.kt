@@ -7,14 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,23 +27,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ds.liverecorder.domain.model.Concert
+import com.ds.liverecorder.presentation.common.component.StatItem
 import com.ds.liverecorder.presentation.common.provider.concertViewModel
+import com.ds.liverecorder.presentation.feature.imprint.component.DataOverviewCard
 import com.ds.liverecorder.presentation.viewmodel.ImprintViewModel
 import java.util.Date
-import java.util.Locale
+
+// 定义展示模式枚举
+enum class ImprintDisplayMode {
+    CALENDAR,
+    MAP,
+    STATISTICS
+}
 
 @Composable
 fun ImprintScreen(
     viewModel: ImprintViewModel = concertViewModel()
 ) {
     val concerts by viewModel.concerts.collectAsStateWithLifecycle()
-    val uiState = viewModel.uiState
+    viewModel.uiState
+    
+    // 当前展示模式状态
+    var displayMode by remember { mutableStateOf(ImprintDisplayMode.STATISTICS) }
     
     // 货币单位选择状态
-    var showCurrencyDropdown by remember { mutableStateOf(false) }
-    
+
     // 支持的货币单位列表
-    val supportedCurrencies = listOf("CNY", "USD", "EUR", "JPY", "HKD")
+    listOf("CNY", "USD", "EUR", "JPY", "HKD")
     
     // 统计数据
     val totalConcerts = concerts.size
@@ -57,14 +67,14 @@ fun ImprintScreen(
     }
     
     // 当选中货币改变时更新ViewModel
-    LaunchedEffect(uiState.selectedCurrency) {
-        viewModel.updateSelectedCurrency(uiState.selectedCurrency)
+    LaunchedEffect(Unit) {
+        viewModel.updateSelectedCurrency(viewModel.uiState.selectedCurrency)
     }
     
     // 页面加载时计算总花费
     LaunchedEffect(concerts) {
         if (concerts.isNotEmpty()) {
-            viewModel.updateSelectedCurrency(uiState.selectedCurrency)
+            viewModel.updateSelectedCurrency(viewModel.uiState.selectedCurrency)
         }
     }
     
@@ -79,7 +89,7 @@ fun ImprintScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // 标题和货币选择区域
+        // 标题和模式选择区域
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,148 +101,148 @@ fun ImprintScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
             
-            // 货币单位选择按钮
-            Column {
-                TextButton(
-                    onClick = { showCurrencyDropdown = true }
+            // 模式选择按钮
+            Row {
+                IconButton(
+                    onClick = { displayMode = ImprintDisplayMode.CALENDAR }
                 ) {
-                    Text("单位: ${uiState.selectedCurrency}")
                     Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "选择货币单位"
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = "日历模式",
+                        tint = if (displayMode == ImprintDisplayMode.CALENDAR) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
-                DropdownMenu(
-                    expanded = showCurrencyDropdown,
-                    onDismissRequest = { showCurrencyDropdown = false }
+                IconButton(
+                    onClick = { displayMode = ImprintDisplayMode.MAP }
                 ) {
-                    supportedCurrencies.forEach { currency ->
-                        DropdownMenuItem(
-                            text = { Text(currency) },
-                            onClick = {
-                                viewModel.updateSelectedCurrency(currency)
-                                showCurrencyDropdown = false
-                            }
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Map,
+                        contentDescription = "地图模式",
+                        tint = if (displayMode == ImprintDisplayMode.MAP) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                IconButton(
+                    onClick = { displayMode = ImprintDisplayMode.STATISTICS }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.BarChart,
+                        contentDescription = "统计模式",
+                        tint = if (displayMode == ImprintDisplayMode.STATISTICS) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
         }
         
-        // 数据概览卡片
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    text = "数据概览",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
+        // 根据不同模式显示不同内容
+        when (displayMode) {
+            ImprintDisplayMode.CALENDAR -> {
+                // TODO: 实现日历视图
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "日历模式",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text("日历视图内容待实现")
+                    }
+                }
+            }
+            
+            ImprintDisplayMode.MAP -> {
+                // TODO: 实现地图视图
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "地图模式",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text("地图视图内容待实现")
+                    }
+                }
+            }
+            
+            ImprintDisplayMode.STATISTICS -> {
+                // 数据概览卡片
+                DataOverviewCard(
+                    viewModel = viewModel,
+                    totalConcerts = totalConcerts,
+                    watchedConcerts = watchedConcerts,
+                    upcomingConcerts = upcomingConcerts
                 )
                 
-                StatItem("总观演次数", "$totalConcerts")
-                StatItem("已观看", "$watchedConcerts")
-                StatItem("待观看", "$upcomingConcerts")
-                if (uiState.isLoadingRates) {
-                    StatItem("总花费", "计算中...")
-                } else {
-                    // 显示计算后的总花费
-                    StatItem("总花费", "${getCurrencySymbol(uiState.selectedCurrency)}${String.format(Locale.getDefault(), "%.2f", uiState.totalSpent)}")
+                // 年度统计卡片
+                if (concertsByYear.isNotEmpty()) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "年度统计",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            
+                            concertsByYear.forEach { (year, count) ->
+                                StatItem("${year}年", "${count}场")
+                            }
+                        }
+                    }
                 }
-            }
-        }
-        
-        // 年度统计卡片
-        if (concertsByYear.isNotEmpty()) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "年度统计",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    
-                    concertsByYear.forEach { (year, count) ->
-                        StatItem("${year}年", "${count}场")
+                
+                // 分类统计卡片
+                if (concertsByCategory.isNotEmpty()) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "分类统计",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            
+                            concertsByCategory.forEach { (category, count) ->
+                                StatItem(category, "${count}场")
+                            }
+                        }
                     }
                 }
             }
         }
-        
-        // 分类统计卡片
-        if (concertsByCategory.isNotEmpty()) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "分类统计",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    
-                    concertsByCategory.forEach { (category, count) ->
-                        StatItem(category, "${count}场")
-                    }
-                }
-            }
-        }
-    }
-}
-
-/**
- * 获取货币符号
- * @param currency 货币代码
- * @return 货币符号
- */
-fun getCurrencySymbol(currency: String): String {
-    return when (currency) {
-        "CNY" -> "¥"
-        "USD" -> "$"
-        "EUR" -> "€"
-        "JPY" -> "¥"
-        "HKD" -> "HK$"
-        else -> currency
-    }
-}
-
-@Composable
-fun StatItem(
-    label: String,
-    value: String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
-        )
     }
 }
 
