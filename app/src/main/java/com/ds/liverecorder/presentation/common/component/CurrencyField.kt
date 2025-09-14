@@ -95,7 +95,7 @@ fun CurrencyField(
                 },
                 label = { Text("金额") },
                 modifier = Modifier
-                    .weight(3f) // 保持3f的权重
+                    .weight(2f) // 保持2f的权重
                     .padding(end = 8.dp),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal
