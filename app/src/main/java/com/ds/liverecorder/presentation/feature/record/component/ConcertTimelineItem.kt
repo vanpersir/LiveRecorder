@@ -12,14 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ds.liverecorder.presentation.common.component.dateDiffText
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.abs
 
 @Composable
 fun ConcertTimelineItem(
@@ -29,25 +28,13 @@ fun ConcertTimelineItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val oneDayInMillis = 24 * 60 * 60 * 1000L
-    val oneHourInMillis = 60 * 60 * 1000L
-    val timeDiff = date.time - System.currentTimeMillis()
-    val daysDiff = (timeDiff / oneDayInMillis).toInt()
-    val hoursDiff = (timeDiff / oneHourInMillis).toInt()
-
-    val daysText = when {
-        daysDiff > 0 -> "${abs(daysDiff)}天后"
-        daysDiff < 0 -> "${abs(daysDiff)}天前"
-        hoursDiff > 0 -> "${abs(hoursDiff)}小时后"
-        hoursDiff < 0 -> "${abs(hoursDiff)}小时前"
-        else -> "今天"
-    }
+    val daysText = dateDiffText(date)
 
     // 暂时没有找到合适的颜色，后续再处理
-    val daysTextColor = when {
-        daysDiff >= 0 -> Color(0xFFA52A2A)
-        else -> Color(0xFF8B8000)
-    }
+//    val daysTextColor = when {
+//        daysDiff >= 0 -> Color(0xFFA52A2A)
+//        else -> Color(0xFF8B8000)
+//    }
 
     Card(
         modifier = modifier

@@ -22,10 +22,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ds.liverecorder.presentation.common.component.PosterImage
+import com.ds.liverecorder.presentation.common.component.dateDiffText
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.abs
 
 @Composable
 fun ConcertCard(
@@ -37,19 +37,7 @@ fun ConcertCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val oneDayInMillis = 24 * 60 * 60 * 1000L
-    val oneHourInMillis = 60 * 60 * 1000L
-    val timeDiff = date.time - System.currentTimeMillis()
-    val daysDiff = (timeDiff / oneDayInMillis).toInt()
-    val hoursDiff = (timeDiff / oneHourInMillis).toInt()
-    
-    val daysText = when {
-        daysDiff > 0 -> "${abs(daysDiff)}天后"
-        daysDiff < 0 -> "${abs(daysDiff)}天前"
-        hoursDiff > 0 -> "${abs(hoursDiff)}小时后"
-        hoursDiff < 0 -> "${abs(hoursDiff)}小时前"
-        else -> "今天"
-    }
+    val daysText = dateDiffText(date)
     
     Card(
         modifier = modifier
