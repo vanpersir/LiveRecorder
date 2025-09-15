@@ -405,7 +405,7 @@ fun ConcertItem(
             )
             
             Text(
-                text = SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(concert.date),
+                text = SimpleDateFormat("MM-dd HH:mm EEEE", Locale.getDefault()).format(concert.date),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

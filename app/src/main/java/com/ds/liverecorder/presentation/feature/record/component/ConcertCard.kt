@@ -56,7 +56,7 @@ fun ConcertCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.Top
         ) {
             // 使用PosterImage组件展示海报
@@ -72,7 +72,7 @@ fun ConcertCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp)
+                    .padding(start = 8.dp)
             ) {
                 Text(
                     text = title,

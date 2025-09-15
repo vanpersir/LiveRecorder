@@ -208,7 +208,7 @@ fun ConcertDetailContent(concert: Concert) {
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(
-                        text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(concert.date),
+                        text = SimpleDateFormat("yyyy-MM-dd HH:mm EEEE", Locale.getDefault()).format(concert.date),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

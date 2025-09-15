@@ -20,29 +20,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ds.liverecorder.presentation.common.component.PosterImage
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import kotlin.math.abs
 
 @Composable
 fun ConcertPoster(
     title: String,
-    date: Date,
-    venue: String,
     posterPath: String? = null,
     @SuppressLint("ModifierParameter")
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val oneDayInMillis = 24 * 60 * 60 * 1000L
-    val daysDiff = ((date.time - System.currentTimeMillis()) / oneDayInMillis).toInt()
-    val daysText = when {
-        daysDiff > 0 -> "${abs(daysDiff)}天后"
-        daysDiff < 0 -> "${abs(daysDiff)}天前"
-        else -> "今天"
-    }
-    
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -74,32 +60,9 @@ fun ConcertPoster(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center
-                )
-                
-                Text(
-                    text = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date),
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp),
-                    textAlign = TextAlign.Center
-                )
-                
-                Text(
-                    text = venue,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 2.dp),
-                    textAlign = TextAlign.Center
-                )
-                
-                Text(
-                    text = daysText,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .padding(top = 4.dp)
-                        .align(Alignment.Start)
                 )
             }
         }
@@ -110,8 +73,6 @@ fun ConcertPoster(
 @Composable
 fun ConcertPosterPreview() {
     ConcertPoster(
-        title = "演出名称",
-        date = Date(),
-        venue = "演出场地"
+        title = "演出名称"
     )
 }

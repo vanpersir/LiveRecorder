@@ -151,8 +151,6 @@ fun UpcomingScreen(
                             items(upcomingConcerts) { concert ->
                                 ConcertPoster(
                                     title = concert.title,
-                                    date = concert.date,
-                                    venue = concert.venue,
                                     posterPath = concert.posterPath,
                                     onClick = { onNavigateToDetail(concert) }
                                 )
